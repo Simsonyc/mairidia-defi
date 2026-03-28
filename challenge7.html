@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge 7 Jours — M'Airidia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .challenge-wrapper { padding: 60px 0 100px; }
+
+    .challenge-hero {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .fire-emoji {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 16px;
+      animation: fadeUp 0.5s ease;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin: 40px 0;
+    }
+
+    .day-card {
+      aspect-ratio: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-card:hover {
+      border-color: var(--vert);
+      background: rgba(184,245,66,0.05);
+    }
+
+    .day-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--vert);
+    }
+
+    .day-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .conditions-list {
+      margin: 32px 0;
+    }
+
+    .condition-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .condition-item:last-child { border-bottom: none; }
+
+    .cond-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--gris);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .cond-title { font-weight: 600; margin-bottom: 4px; }
+    .cond-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+    .reward-highlight {
+      background: linear-gradient(135deg, rgba(184,245,66,0.08), rgba(255,107,53,0.05));
+      border: 1px solid rgba(184,245,66,0.25);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      margin: 32px 0;
+    }
+
+    .pts-big {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--vert);
+    }
+
+    @media (max-width: 480px) {
+      .days-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="logo" href="index.html">M'Airidia</a>
+      <a href="defis.html" class="btn btn-secondary" style="padding:8px 18px;font-size:0.82rem;">← Micro-défis</a>
+    </div>
+  </header>
+
+  <div class="challenge-wrapper">
+    <div class="container">
+
+      <div class="challenge-hero fade-up">
+        <span class="fire-emoji">🔥</span>
+        <span class="tag">Niveau avancé</span>
+        <h1 style="font-size: clamp(1.8rem, 5vw, 2.8rem); margin: 16px 0 12px;">
+          Challenge <span style="color:var(--vert)">7 jours</span>
+        </h1>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
+          7 jours de mobilité alternative. Une vidéo pour résumer ton expérience.
+          <strong style="color:var(--blanc)">+30 points bonus.</strong>
+        </p>
+      </div>
+
+      <!-- RÉCOMPENSE -->
+      <div class="reward-highlight fade-up-delay-1">
+        <div class="pts-big">+30 pts</div>
+        <p style="color: var(--text-muted); margin-top: 8px;">soit 3 tickets de tombola supplémentaires</p>
+        <div style="margin-top: 16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <span class="tag">Badge "Déclencheur de Changement"</span>
+          <span class="tag">Mise en avant sur le classement</span>
+        </div>
+      </div>
+
+      <!-- 7 JOURS -->
+      <div class="fade-up-delay-1">
+        <h2 style="font-size: 1.2rem; margin-bottom: 16px;">Les 7 jours à couvrir</h2>
+        <div class="days-grid">
+          <div class="day-card"><span class="day-num">J1</span><span class="day-label">Lundi</span></div>
+          <div class="day-card"><span class="day-num">J2</span><span class="day-label">Mardi</span></div>
+          <div class="day-card"><span class="day-num">J3</span><span class="day-label">Mercredi</span></div>
+          <div class="day-card"><span class="day-num">J4</span><span class="day-label">Jeudi</span></div>
+          <div class="day-card"><span class="day-num">J5</span><span class="day-label">Vendredi</span></div>
+          <div class="day-card"><span class="day-num">J6</span><span class="day-label">Samedi</span></div>
+          <div class="day-card"><span class="day-num">J7</span><span class="day-label">Dimanche</span></div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); text-align:center;">
+          Les 7 jours peuvent être consécutifs ou répartis dans le mois.
+        </p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- CONDITIONS -->
+      <div class="fade-up-delay-2">
+        <h2 style="font-size: 1.2rem; margin-bottom: 20px;">Ce qu'on attend de toi</h2>
+        <div class="conditions-list">
+          <div class="condition-item">
+            <div class="cond-icon">🚶</div>
+            <div>
+              <div class="cond-title">7 trajets en mobilité alternative</div>
+              <div class="cond-desc">Vélo, marche, transports en commun, covoiturage — tout sauf la voiture solo.</div>
+            </div>
+          </div>
+          <div class="condition-item">
+            <div class="cond-icon">📸</div>
+            <div>
+              <div class="cond-title">Une preuve par jour</div>
+              <div class="cond-desc">Story, post, ou photo avec #DefimobiliteMAiridia + ton numéro. Peut être en privé si tu le souhaites, mais doit être consultable par l'équipe.</div>
+            </div>
+          </div>
+          <div class="condition-item">
+            <div class="cond-icon">🎬</div>
+            <div>
+              <div class="cond-title">Une vidéo de conclusion (30–60 sec)</div>
+              <div class="cond-desc">Style vlog : qu'est-ce que tu as changé ? Qu'est-ce que tu as découvert ? Qu'est-ce que tu gardes ? Postée sur les réseaux avec le hashtag.</div>
+            </div>
+          </div>
+          <div class="condition-item">
+            <div class="cond-icon">🎫</div>
+            <div>
+              <div class="cond-title">Ton numéro de participation</div>
+              <div class="cond-desc">Mentionne ton numéro MAI-XXXXX dans chacun de tes posts pour que l'équipe puisse valider et créditer tes points.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- INSCRIPTION -->
+      <div class="highlight-box fade-up-delay-2" style="margin-bottom: 32px;">
+        <p style="font-weight: 600; margin-bottom: 8px;">📋 Pour démarrer le Challenge 7 jours :</p>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          Poste un message sur les réseaux avec <strong style="color:var(--blanc)">#Challenge7JoursMAiridia</strong>
+          + ton numéro de participation pour t'inscrire officiellement.
+          L'équipe te comptabilisera automatiquement.
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 12px;">
+          Numéro de participation : <strong id="numero-display" style="color:var(--vert)">—</strong>
+        </p>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="classement.html" class="btn btn-secondary" style="margin-right:12px;">
+          Voir le classement
+        </a>
+        <a href="defis.html" class="btn btn-primary">
+          Commencer par un micro-défi →
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Défi Mobilité M'Airidia · <a href="classement.html" style="color:var(--vert)">Classement</a></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    const session = getSession();
+    if (session.numero) {
+      document.getElementById('numero-display').textContent = session.numero;
+    }
+  </script>
+
+</body>
+</html>

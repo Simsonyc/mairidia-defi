@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Défi Mobilité M'Airidia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-wrapper { padding: 40px 0 80px; }
+
+    /* LOGIN */
+    .login-screen {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-card h2 { margin-bottom: 8px; font-size: 1.5rem; }
+    .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; }
+
+    .input-field {
+      width: 100%;
+      background: var(--gris);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      color: var(--blanc);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .input-field:focus { border-color: var(--vert); }
+    .input-field.error { border-color: #ff4444; }
+
+    /* TABS */
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px 20px;
+      border-radius: 100px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--vert);
+      color: var(--noir);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* STATS ADMIN */
+    .stats-admin {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-admin {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+    }
+
+    .stat-admin-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--vert);
+    }
+
+    .stat-admin-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* VALIDATION TABLE */
+    .validation-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .validation-table th {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .validation-table td {
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+
+    .validation-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .btn-valider-defi {
+      padding: 8px 16px;
+      background: var(--vert);
+      color: var(--noir);
+      border: none;
+      border-radius: 100px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-valider-defi:hover { background: #ceff5a; }
+
+    .btn-valider-defi:disabled {
+      background: var(--gris);
+      color: var(--text-muted);
+      cursor: default;
+    }
+
+    .btn-danger {
+      padding: 8px 14px;
+      background: transparent;
+      color: #ff6b6b;
+      border: 1px solid rgba(255,107,107,0.3);
+      border-radius: 100px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: rgba(255,107,107,0.1);
+      border-color: #ff6b6b;
+    }
+
+    /* SEARCH BAR */
+    .search-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      color: var(--blanc);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus { border-color: var(--vert); }
+
+    .filter-select {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--blanc);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* VALIDATION MANUELLE */
+    .manual-form {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-family: 'Syne', sans-serif;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .form-select {
+      width: 100%;
+      background: var(--gris);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      color: var(--blanc);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    /* TIRAGE AU SORT */
+    .tirage-section {
+      background: linear-gradient(135deg, var(--card-bg), rgba(184,245,66,0.04));
+      border: 1px solid rgba(184,245,66,0.25);
+      border-radius: var(--radius);
+      padding: 36px;
+      text-align: center;
+    }
+
+    .tirage-btn {
+      background: var(--vert);
+      color: var(--noir);
+      border: none;
+      padding: 18px 48px;
+      border-radius: 100px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 24px;
+    }
+
+    .tirage-btn:hover {
+      background: #ceff5a;
+      transform: scale(1.03);
+      box-shadow: 0 8px 30px rgba(184,245,66,0.3);
+    }
+
+    .tirage-result {
+      display: none;
+      margin-top: 32px;
+      padding: 28px;
+      background: rgba(255,215,0,0.05);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: var(--radius-sm);
+    }
+
+    .winner-numero {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #FFD700;
+      margin: 12px 0;
+    }
+
+    .winner-pseudo {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--vert);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      font-size: 0.88rem;
+      color: var(--vert);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-width: 320px;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.error {
+      border-color: #ff4444;
+      color: #ff4444;
+    }
+
+    /* BADGE PROFIL */
+    .profil-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      background: var(--gris);
+    }
+
+    /* DEFIS PILLS */
+    .defi-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      background: rgba(184,245,66,0.1);
+      border: 1px solid rgba(184,245,66,0.2);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      color: var(--vert);
+      margin: 2px;
+    }
+
+    /* LOG */
+    .log-entry {
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border-left: 3px solid var(--vert);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+
+    .log-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'Syne', sans-serif;
+    }
+
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .tab-btn { font-size: 0.75rem; padding: 8px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="logo" href="index.html">M'Airidia</a>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <a href="classement.html" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;">Voir classement</a>
+        <button onclick="logout()" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;">Déconnexion</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- LOGIN -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card fade-up">
+      <div style="font-size:2.5rem; margin-bottom:16px;">🔐</div>
+      <h2>Espace Admin</h2>
+      <p>Accès réservé à l'équipe M'Airidia</p>
+      <input
+        type="password"
+        class="input-field"
+        id="admin-key-input"
+        placeholder="Clé d'administration"
+        onkeydown="if(event.key==='Enter') login()"
+        autocomplete="off"
+      >
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="login()">
+        Accéder au tableau de bord
+      </button>
+      <p style="margin-top:16px; font-size:0.75rem; color:var(--text-muted);">
+        Clé configurée dans la variable d'environnement <code style="color:var(--vert)">ADMIN_KEY</code> sur Vercel.
+      </p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="admin-wrapper" id="admin-dashboard" style="display:none;">
+    <div class="container-wide">
+
+      <div class="fade-up" style="margin-bottom:32px;">
+        <span class="tag">Tableau de bord</span>
+        <h1 style="font-size: 2rem; margin-top:12px;">
+          Admin <span style="color:var(--vert)">M'Airidia</span>
+        </h1>
+        <p style="color:var(--text-muted); font-size:0.88rem; margin-top:6px;">
+          Dernière synchro : <span id="last-sync">—</span> ·
+          <button onclick="loadData()" style="background:none;border:none;color:var(--vert);cursor:pointer;font-size:0.88rem;">↻ Actualiser</button>
+        </p>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-admin" id="stats-admin">
+        <div class="stat-admin">
+          <div class="stat-admin-val" id="a-total">—</div>
+          <div class="stat-admin-label">Participants ce mois</div>
+        </div>
+        <div class="stat-admin">
+          <div class="stat-admin-val" id="a-defis">—</div>
+          <div class="stat-admin-label">Défis à valider</div>
+        </div>
+        <div class="stat-admin">
+          <div class="stat-admin-val" id="a-points">—</div>
+          <div class="stat-admin-label">Points distribués</div>
+        </div>
+        <div class="stat-admin">
+          <div class="stat-admin-val" id="a-tickets">—</div>
+          <div class="stat-admin-label">Tickets tombola</div>
+        </div>
+        <div class="stat-admin">
+          <div class="stat-admin-val" id="a-garantis">—</div>
+          <div class="stat-admin-label">Lots garantis (5 défis)</div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('participants')">👥 Participants</button>
+        <button class="tab-btn" onclick="switchTab('validation')">✅ Valider un défi</button>
+        <button class="tab-btn" onclick="switchTab('tirage')">🎰 Tirage au sort</button>
+        <button class="tab-btn" onclick="switchTab('log')">📋 Journal</button>
+      </div>
+
+      <!-- TAB : PARTICIPANTS -->
+      <div class="tab-content active" id="tab-participants">
+        <div class="card">
+          <div class="search-row">
+            <input
+              type="text"
+              class="search-input"
+              id="search-input"
+              placeholder="🔍 Rechercher par pseudo ou numéro..."
+              oninput="filterParticipants()"
+            >
+            <select class="filter-select" id="filter-profil" onchange="filterParticipants()">
+              <option value="">Tous les profils</option>
+              <option value="explorateur">🚶 Explorateur</option>
+              <option value="optimiseur">⚡ Optimiseur</option>
+              <option value="ecoconnecte">🌿 Éco-Connecté</option>
+              <option value="multimodal">🔀 Multimodal</option>
+              <option value="declencheur">💡 Déclencheur</option>
+            </select>
+            <select class="filter-select" id="filter-defis" onchange="filterParticipants()">
+              <option value="">Tous</option>
+              <option value="0">0 défi</option>
+              <option value="1">1+ défi</option>
+              <option value="5">5 défis (lot garanti)</option>
+            </select>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="validation-table" id="participants-table">
+              <thead>
+                <tr>
+                  <th>Numéro</th>
+                  <th>Pseudo</th>
+                  <th>Profil</th>
+                  <th>Défis réalisés</th>
+                  <th>Points</th>
+                  <th>Tickets</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="participants-body">
+                <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:40px;">Chargement...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB : VALIDATION -->
+      <div class="tab-content" id="tab-validation">
+        <div class="manual-form">
+          <h2 style="font-size:1.2rem; margin-bottom:8px;">Valider un défi manuellement</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:24px;">
+            Après vérification du post sur les réseaux sociaux (#DefimobiliteMAiridia + numéro visible).
+          </p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Numéro de participation *</label>
+              <input type="text" class="input-field" id="v-numero" placeholder="MAI-202501-4231" style="margin:0;">
+            </div>
+            <div class="form-group">
+              <label>Type de défi *</label>
+              <select class="form-select" id="v-defi">
+                <option value="">— Choisir —</option>
+                <option value="1">🚴 Défi 1 — Vélo / Marche</option>
+                <option value="2">🚌 Défi 2 — Nouveau transport</option>
+                <option value="3">🚗 Défi 3 — Covoiturage</option>
+                <option value="4">🔀 Défi 4 — Multimodal</option>
+                <option value="5">💶 Défi 5 — Calculer son trajet</option>
+                <option value="challenge7">🔥 Challenge 7 jours</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Points à attribuer</label>
+              <select class="form-select" id="v-points">
+                <option value="10">+10 pts (défi standard)</option>
+                <option value="30">+30 pts (Challenge 7 jours)</option>
+                <option value="5">+5 pts (quiz)</option>
+                <option value="custom">Personnalisé...</option>
+              </select>
+            </div>
+            <div class="form-group" id="custom-pts-group" style="display:none;">
+              <label>Points personnalisés</label>
+              <input type="number" class="input-field" id="v-points-custom" placeholder="ex: 15" min="1" max="100" style="margin:0;">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:20px;">
+            <label>Lien du post (optionnel)</label>
+            <input type="text" class="input-field" id="v-lien" placeholder="https://instagram.com/..." style="margin:0;">
+          </div>
+
+          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="validerDefi()">
+              ✅ Valider et créditer les points
+            </button>
+            <button class="btn btn-secondary" onclick="clearForm()">
+              Effacer
+            </button>
+          </div>
+        </div>
+
+        <!-- RECHERCHE RAPIDE -->
+        <div class="card">
+          <h3 style="font-size:1rem; margin-bottom:16px;">🔍 Vérifier un participant</h3>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <input type="text" class="search-input" id="check-numero" placeholder="Entrer un numéro MAI-..." style="max-width:280px;">
+            <button class="btn btn-secondary" style="padding:10px 20px;" onclick="checkParticipant()">Vérifier</button>
+          </div>
+          <div id="check-result" style="margin-top:16px; display:none;"></div>
+        </div>
+      </div>
+
+      <!-- TAB : TIRAGE -->
+      <div class="tab-content" id="tab-tirage">
+        <div class="tirage-section">
+          <div style="font-size:3rem; margin-bottom:16px;">🎰</div>
+          <h2 style="font-size:1.8rem; margin-bottom:8px;">Tirage au sort du mois</h2>
+          <p style="color:var(--text-muted); max-width:480px; margin:0 auto 8px;">
+            Chaque participant a autant de tickets que ses points ÷ 10.
+            Le tirage est pondéré — plus tu as de points, plus tu as de chances.
+          </p>
+
+          <div style="display:flex; gap:24px; justify-content:center; margin:24px 0; flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <div style="font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--vert);" id="t-tickets-total">—</div>
+              <div style="font-size:0.78rem; color:var(--text-muted);">tickets au total</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--vert);" id="t-garantis">—</div>
+              <div style="font-size:0.78rem; color:var(--text-muted);">lots garantis (5 défis)</div>
+            </div>
+          </div>
+
+          <button class="tirage-btn" onclick="lancerTirage()">
+            🎰 Lancer le tirage au sort
+          </button>
+
+          <div class="tirage-result" id="tirage-result">
+            <div style="font-size:1.5rem; margin-bottom:8px;">🏆 Gagnant !</div>
+            <div class="winner-numero" id="winner-numero">—</div>
+            <div class="winner-pseudo" id="winner-pseudo">—</div>
+            <div style="margin-top:16px; font-size:0.82rem; color:var(--text-muted);">
+              Présente-toi à l'accueil avec ce numéro pour récupérer ton lot.
+            </div>
+            <button onclick="publierResultat()" class="btn btn-primary" style="margin-top:20px;">
+              📢 Publier sur la page classement
+            </button>
+          </div>
+        </div>
+
+        <!-- LOTS GARANTIS -->
+        <div class="card" style="margin-top:24px;">
+          <h3 style="font-size:1rem; margin-bottom:16px;">🎁 Lots garantis (5 défis réalisés)</h3>
+          <div id="garantis-list">
+            <p style="color:var(--text-muted); font-size:0.85rem;">Chargement...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB : JOURNAL -->
+      <div class="tab-content" id="tab-log">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="font-size:1.1rem;">Journal des actions</h2>
+            <button onclick="clearLog()" class="btn-danger">Effacer le journal</button>
+          </div>
+          <div id="log-list">
+            <p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:20px;">Aucune action enregistrée.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // =============================================
+    // AUTH
+    // =============================================
+    let ADMIN_KEY = '';
+    let allParticipants = [];
+    let actionLog = JSON.parse(localStorage.getItem('mairidia_log') || '[]');
+
+    function login() {
+      const key = document.getElementById('admin-key-input').value.trim();
+      if (!key) return;
+
+      ADMIN_KEY = key;
+      // On teste la clé en chargeant les données
+      loadData().then(ok => {
+        if (ok) {
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('admin-dashboard').style.display = 'block';
+          localStorage.setItem('mairidia_admin_key', key);
+        } else {
+          document.getElementById('admin-key-input').classList.add('error');
+          showToast('Clé incorrecte ou API inaccessible', 'error');
+          setTimeout(() => document.getElementById('admin-key-input').classList.remove('error'), 2000);
+        }
+      });
+    }
+
+    function logout() {
+      ADMIN_KEY = '';
+      localStorage.removeItem('mairidia_admin_key');
+      document.getElementById('admin-dashboard').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('admin-key-input').value = '';
+    }
+
+    // Auto-login si clé stockée
+    window.addEventListener('load', () => {
+      const saved = localStorage.getItem('mairidia_admin_key');
+      if (saved) {
+        document.getElementById('admin-key-input').value = saved;
+        ADMIN_KEY = saved;
+        loadData().then(ok => {
+          if (ok) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'block';
+          } else {
+            ADMIN_KEY = '';
+            localStorage.removeItem('mairidia_admin_key');
+          }
+        });
+      }
+    });
+
+    // =============================================
+    // DATA
+    // =============================================
+    async function loadData() {
+      try {
+        const res = await fetch('/api/classement');
+        if (!res.ok) return false;
+        const data = await res.json();
+
+        allParticipants = data.participants || [];
+        renderStats();
+        renderParticipants(allParticipants);
+        renderGarantis();
+        document.getElementById('last-sync').textContent = new Date().toLocaleTimeString('fr-FR');
+        return true;
+      } catch(e) {
+        // Mode démo si pas d'API
+        allParticipants = getDemoData();
+        renderStats();
+        renderParticipants(allParticipants);
+        renderGarantis();
+        document.getElementById('last-sync').textContent = 'Mode démo';
+        return true;
+      }
+    }
+
+    function getDemoData() {
+      return [
+        { pseudo: 'Rapide-Aigle-342', numero: 'MAI-202501-4231', profil: 'multimodal', points: 45, defis: 4, tickets: 4 },
+        { pseudo: 'Vert-Lynx-891', numero: 'MAI-202501-1203', profil: 'ecoconnecte', points: 35, defis: 3, tickets: 3 },
+        { pseudo: 'Urbain-Faucon-567', numero: 'MAI-202501-7823', profil: 'declencheur', points: 55, defis: 5, tickets: 5 },
+        { pseudo: 'Futé-Cerf-112', numero: 'MAI-202501-3341', profil: 'optimiseur', points: 15, defis: 1, tickets: 1 },
+        { pseudo: 'Agile-Renard-776', numero: 'MAI-202501-9902', profil: 'explorateur', points: 5, defis: 0, tickets: 0 },
+      ];
+    }
+
+    function renderStats() {
+      const total = allParticipants.length;
+      const totalDefis = allParticipants.reduce((s, p) => s + (p.defis || 0), 0);
+      const totalPoints = allParticipants.reduce((s, p) => s + (p.points || 0), 0);
+      const totalTickets = allParticipants.reduce((s, p) => s + (p.tickets || Math.floor(p.points/10)), 0);
+      const garantis = allParticipants.filter(p => (p.defis || 0) >= 5).length;
+
+      document.getElementById('a-total').textContent = total;
+      document.getElementById('a-defis').textContent = totalDefis;
+      document.getElementById('a-points').textContent = totalPoints;
+      document.getElementById('a-tickets').textContent = totalTickets;
+      document.getElementById('a-garantis').textContent = garantis;
+      document.getElementById('t-tickets-total').textContent = totalTickets;
+      document.getElementById('t-garantis').textContent = garantis;
+    }
+
+    function renderParticipants(list) {
+      const tbody = document.getElementById('participants-body');
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px;">Aucun participant trouvé</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => {
+        const profil = PROFILS[p.profil] || {};
+        const tickets = p.tickets || Math.floor(p.points / 10);
+        const defisCount = p.defis || 0;
+        const hasGaranti = defisCount >= 5;
+
+        return `
+          <tr>
+            <td style="font-family:'Syne',sans-serif;font-size:0.82rem;color:var(--vert);">${p.numero}</td>
+            <td style="font-weight:500;">${p.pseudo}</td>
+            <td><span class="profil-chip">${profil.emoji || '?'} ${(profil.nom || p.profil || '').split(' ')[0]}</span></td>
+            <td>
+              <span style="color:${hasGaranti ? 'var(--vert)' : 'var(--blanc)'}; font-weight:${hasGaranti ? '700' : '400'}">
+                ${defisCount}/5 ${hasGaranti ? '🏆' : ''}
+              </span>
+            </td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--vert);">${p.points}</td>
+            <td style="font-family:'Syne',sans-serif;font-size:0.85rem;">🎫 ${tickets}</td>
+            <td>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="btn-valider-defi" onclick="prefillValidation('${p.numero}')">+ Points</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderGarantis() {
+      const garantis = allParticipants.filter(p => (p.defis || 0) >= 5);
+      const el = document.getElementById('garantis-list');
+
+      if (garantis.length === 0) {
+        el.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;">Aucun participant n'a encore réalisé les 5 défis ce mois-ci.</p>`;
+        return;
+      }
+
+      el.innerHTML = garantis.map(p => `
+        <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:8px;margin-bottom:8px;">
+          <span style="font-size:1.2rem;">🏆</span>
+          <div style="flex:1;">
+            <div style="font-weight:600;">${p.pseudo}</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);">${p.numero}</div>
+          </div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;color:#FFD700;">${p.points} pts</div>
+        </div>
+      `).join('');
+    }
+
+    // =============================================
+    // FILTER
+    // =============================================
+    function filterParticipants() {
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const profil = document.getElementById('filter-profil').value;
+      const defisFilter = document.getElementById('filter-defis').value;
+
+      const filtered = allParticipants.filter(p => {
+        const matchSearch = !search ||
+          p.pseudo.toLowerCase().includes(search) ||
+          p.numero.toLowerCase().includes(search);
+        const matchProfil = !profil || p.profil === profil;
+        const defis = p.defis || 0;
+        const matchDefis = !defisFilter ||
+          (defisFilter === '0' && defis === 0) ||
+          (defisFilter === '1' && defis >= 1) ||
+          (defisFilter === '5' && defis >= 5);
+        return matchSearch && matchProfil && matchDefis;
+      });
+
+      renderParticipants(filtered);
+    }
+
+    // =============================================
+    // VALIDATION
+    // =============================================
+    function prefillValidation(numero) {
+      switchTab('validation');
+      document.getElementById('v-numero').value = numero;
+    }
+
+    document.getElementById('v-points').addEventListener('change', function() {
+      document.getElementById('custom-pts-group').style.display =
+        this.value === 'custom' ? 'block' : 'none';
+    });
+
+    async function validerDefi() {
+      const numero = document.getElementById('v-numero').value.trim();
+      const defi = document.getElementById('v-defi').value;
+      const ptsSelect = document.getElementById('v-points').value;
+      const lien = document.getElementById('v-lien').value.trim();
+
+      if (!numero || !defi) {
+        showToast('Numéro et type de défi requis', 'error');
+        return;
+      }
+
+      const pts = ptsSelect === 'custom'
+        ? parseInt(document.getElementById('v-points-custom').value) || 10
+        : parseInt(ptsSelect);
+
+      try {
+        const res = await fetch('/api/points', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': ADMIN_KEY
+          },
+          body: JSON.stringify({
+            numero,
+            defi_id: defi === 'challenge7' ? null : parseInt(defi),
+            points_bonus: pts,
+            type: defi === 'challenge7' ? 'challenge7' : 'defi',
+            lien_preuve: lien
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(`✅ +${pts} pts crédités — Total : ${data.nouveau_total} pts (${data.tickets} tickets)`);
+          addLog(`Défi validé — ${numero} — +${pts} pts${lien ? ' — ' + lien : ''}`);
+          clearForm();
+          loadData();
+        } else {
+          // Mode démo
+          showToast(`✅ Simulation : +${pts} pts pour ${numero} (mode démo)`);
+          addLog(`[DÉMO] Défi validé — ${numero} — +${pts} pts`);
+          clearForm();
+        }
+      } catch(e) {
+        showToast(`✅ Simulation : +${pts} pts pour ${numero} (mode démo)`);
+        addLog(`[DÉMO] Défi validé — ${numero} — +${pts} pts`);
+        clearForm();
+      }
+    }
+
+    function clearForm() {
+      document.getElementById('v-numero').value = '';
+      document.getElementById('v-defi').value = '';
+      document.getElementById('v-points').value = '10';
+      document.getElementById('v-lien').value = '';
+      document.getElementById('custom-pts-group').style.display = 'none';
+    }
+
+    async function checkParticipant() {
+      const numero = document.getElementById('check-numero').value.trim();
+      if (!numero) return;
+
+      const found = allParticipants.find(p =>
+        p.numero.toLowerCase() === numero.toLowerCase()
+      );
+
+      const resultEl = document.getElementById('check-result');
+      resultEl.style.display = 'block';
+
+      if (found) {
+        const profil = PROFILS[found.profil] || {};
+        resultEl.innerHTML = `
+          <div style="background:var(--card-bg);border:1px solid var(--vert);border-radius:8px;padding:16px;">
+            <div style="display:flex;gap:16px;align-items:center;">
+              <span style="font-size:2rem;">${profil.emoji || '?'}</span>
+              <div>
+                <div style="font-weight:600;">${found.pseudo}</div>
+                <div style="font-family:'Syne',sans-serif;color:var(--vert);font-size:0.85rem;">${found.numero}</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                  ${found.points} pts · ${found.defis || 0}/5 défis · 🎫 ${found.tickets || Math.floor(found.points/10)} tickets
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        resultEl.innerHTML = `
+          <div style="padding:12px 16px;background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.2);border-radius:8px;font-size:0.85rem;color:#ff6b6b;">
+            ❌ Aucun participant trouvé avec le numéro <strong>${numero}</strong>
+          </div>
+        `;
+      }
+    }
+
+    // =============================================
+    // TIRAGE AU SORT
+    // =============================================
+    function lancerTirage() {
+      const pool = [];
+      allParticipants.forEach(p => {
+        const tickets = p.tickets || Math.floor(p.points / 10);
+        for (let i = 0; i < tickets; i++) {
+          pool.push(p);
+        }
+      });
+
+      if (pool.length === 0) {
+        showToast('Aucun ticket disponible pour le tirage', 'error');
+        return;
+      }
+
+      // Animation
+      const btn = document.querySelector('.tirage-btn');
+      btn.textContent = '🎰 Tirage en cours...';
+      btn.disabled = true;
+
+      let count = 0;
+      const numEl = document.getElementById('winner-numero');
+      const pseudoEl = document.getElementById('winner-pseudo');
+
+      const anim = setInterval(() => {
+        const rand = pool[Math.floor(Math.random() * pool.length)];
+        numEl.textContent = rand.numero;
+        pseudoEl.textContent = rand.pseudo;
+        count++;
+        if (count > 20) {
+          clearInterval(anim);
+          // Gagnant final
+          const winner = pool[Math.floor(Math.random() * pool.length)];
+          numEl.textContent = winner.numero;
+          pseudoEl.textContent = `${PROFILS[winner.profil]?.emoji || ''} ${winner.pseudo} — ${winner.points} pts`;
+          document.getElementById('tirage-result').style.display = 'block';
+          btn.textContent = '🎰 Nouveau tirage';
+          btn.disabled = false;
+          addLog(`Tirage lancé — Gagnant : ${winner.numero} (${winner.pseudo})`);
+          showToast(`🏆 Gagnant : ${winner.numero}`);
+        }
+      }, 80);
+    }
+
+    function publierResultat() {
+      showToast('✅ Résultat enregistré — Il apparaîtra sur la page classement après redéploiement.');
+      addLog(`Résultat du tirage publié sur la page classement`);
+    }
+
+    // =============================================
+    // LOG
+    // =============================================
+    function addLog(msg) {
+      const entry = {
+        time: new Date().toLocaleString('fr-FR'),
+        msg
+      };
+      actionLog.unshift(entry);
+      if (actionLog.length > 50) actionLog.pop();
+      localStorage.setItem('mairidia_log', JSON.stringify(actionLog));
+      renderLog();
+    }
+
+    function renderLog() {
+      const el = document.getElementById('log-list');
+      if (actionLog.length === 0) {
+        el.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:20px;">Aucune action enregistrée.</p>`;
+        return;
+      }
+      el.innerHTML = actionLog.map(e => `
+        <div class="log-entry">
+          <div class="log-time">${e.time}</div>
+          <div>${e.msg}</div>
+        </div>
+      `).join('');
+    }
+
+    function clearLog() {
+      if (confirm('Effacer tout le journal ?')) {
+        actionLog = [];
+        localStorage.setItem('mairidia_log', '[]');
+        renderLog();
+      }
+    }
+
+    // =============================================
+    // TABS
+    // =============================================
+    function switchTab(name) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tab-${name}`).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        if (b.getAttribute('onclick').includes(name)) b.classList.add('active');
+      });
+      if (name === 'log') renderLog();
+    }
+
+    // =============================================
+    // TOAST
+    // =============================================
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type === 'error' ? 'error' : ''} show`;
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+  </script>
+
+</body>
+</html>

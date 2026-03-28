@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classement — Défi Mobilité M'Airidia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --refresh-interval: 30; /* secondes */
+    }
+
+    body { background: var(--noir); }
+
+    .board-wrapper { padding: 48px 0 80px; }
+
+    /* HERO CLASSEMENT */
+    .board-hero {
+      text-align: center;
+      margin-bottom: 56px;
+      position: relative;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,107,53,0.1);
+      border: 1px solid rgba(255,107,53,0.3);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-family: 'Syne', sans-serif;
+      color: #ff6b35;
+      margin-bottom: 20px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: #ff6b35;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    .refresh-bar {
+      height: 2px;
+      background: var(--gris);
+      border-radius: 1px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .refresh-fill {
+      height: 100%;
+      background: var(--vert);
+      border-radius: 1px;
+      width: 100%;
+      animation: countdown 30s linear infinite;
+    }
+
+    @keyframes countdown {
+      from { width: 100%; }
+      to { width: 0%; }
+    }
+
+    /* TOP 3 */
+    .podium {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .podium-item {
+      text-align: center;
+      flex: 1;
+      max-width: 180px;
+    }
+
+    .podium-avatar {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .podium-block {
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 16px 12px;
+    }
+
+    .podium-item:nth-child(2) .podium-block {
+      height: 120px;
+      background: linear-gradient(180deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+      border: 1px solid rgba(255,215,0,0.3);
+    }
+
+    .podium-item:nth-child(1) .podium-block {
+      height: 90px;
+      background: linear-gradient(180deg, rgba(192,192,192,0.12), rgba(192,192,192,0.04));
+      border: 1px solid rgba(192,192,192,0.2);
+    }
+
+    .podium-item:nth-child(3) .podium-block {
+      height: 75px;
+      background: linear-gradient(180deg, rgba(205,127,50,0.1), rgba(205,127,50,0.03));
+      border: 1px solid rgba(205,127,50,0.2);
+    }
+
+    .podium-rank { font-size: 1.5rem; }
+    .podium-pts {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--vert);
+    }
+
+    .podium-pseudo {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      word-break: break-all;
+    }
+
+    .podium-profil {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* TABLE */
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .rank-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rank-table th {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 10px 16px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .rank-table th:last-child { text-align: right; }
+
+    .rank-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.15s;
+    }
+
+    .rank-table tbody tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .rank-table td {
+      padding: 14px 16px;
+      font-size: 0.88rem;
+    }
+
+    .td-rank {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      color: var(--text-muted);
+      width: 40px;
+    }
+
+    .tr-gold .td-rank { color: #FFD700; }
+    .tr-silver .td-rank { color: #C0C0C0; }
+    .tr-bronze .td-rank { color: #CD7F32; }
+
+    .td-pseudo { font-weight: 500; }
+    .td-profil { color: var(--text-muted); font-size: 0.8rem; }
+    .td-defis { font-size: 0.8rem; color: var(--text-muted); }
+
+    .td-pts {
+      text-align: right;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      color: var(--vert);
+    }
+
+    .td-tickets {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 20px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .stat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--vert);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* TIRAGE */
+    .tirage-box {
+      margin-top: 48px;
+      padding: 28px;
+      background: linear-gradient(135deg, var(--card-bg), rgba(184,245,66,0.03));
+      border: 1px solid rgba(184,245,66,0.2);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+
+    .tirage-date {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--vert);
+      margin: 8px 0;
+    }
+
+    .gagnants-section {
+      margin-top: 48px;
+    }
+
+    .gagnant-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: rgba(255,215,0,0.05);
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+    }
+
+    .gagnant-emoji { font-size: 1.5rem; }
+    .gagnant-num { font-family: 'Syne', sans-serif; font-weight: 700; color: #FFD700; }
+    .gagnant-lot { font-size: 0.85rem; color: var(--text-muted); }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-emoji { font-size: 3rem; display: block; margin-bottom: 16px; }
+
+    @media (max-width: 640px) {
+      .podium { gap: 8px; }
+      .rank-table th:nth-child(3),
+      .rank-table td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="logo" href="index.html">M'Airidia</a>
+      <a href="quiz.html" class="btn btn-primary" style="padding:8px 20px;font-size:0.82rem;">Je participe →</a>
+    </div>
+  </header>
+
+  <div class="board-wrapper">
+    <div class="container-wide">
+
+      <div class="board-hero fade-up">
+        <div class="live-badge">
+          <div class="live-dot"></div>
+          Mis à jour en temps réel
+        </div>
+        <h1 class="display" style="font-size: clamp(2rem, 6vw, 3.5rem);">
+          Classement<br><span style="color:var(--vert)">du mois</span>
+        </h1>
+        <p class="lead" style="margin-top: 12px; font-size: 1rem;">
+          Tirage au sort le <strong id="tirage-date" style="color:var(--blanc)">—</strong> · Résultats affichés ici uniquement
+        </p>
+      </div>
+
+      <!-- BARRE REFRESH -->
+      <div class="refresh-bar">
+        <div class="refresh-fill" id="refresh-fill"></div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row fade-up-delay-1" id="stats-row">
+        <div class="stat-card">
+          <span class="stat-val" id="stat-participants">—</span>
+          <span class="stat-label">Participants</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-defis">—</span>
+          <span class="stat-label">Défis réalisés</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-tickets">—</span>
+          <span class="stat-label">Tickets tombola</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="stat-jours">—</span>
+          <span class="stat-label">Jours restants</span>
+        </div>
+      </div>
+
+      <!-- PODIUM TOP 3 -->
+      <div id="podium-section"></div>
+
+      <!-- TABLEAU COMPLET -->
+      <div class="card fade-up-delay-2" style="overflow: auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+          <h2 style="font-size: 1.2rem;">Tous les participants</h2>
+          <span id="last-update" style="font-size:0.75rem; color:var(--text-muted);">Actualisation dans <span id="countdown">30</span>s</span>
+        </div>
+        <div id="table-container">
+          <div class="empty-state">
+            <span class="empty-emoji">⏳</span>
+            <p>Chargement du classement...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIRAGE INFO -->
+      <div class="tirage-box fade-up-delay-3">
+        <p style="font-size:0.85rem; color:var(--text-muted);">Prochain tirage au sort</p>
+        <div class="tirage-date" id="tirage-date-box">Fin de mois</div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-top: 8px;">
+          10 points = 1 ticket · Lot garanti pour 5 défis réalisés
+        </p>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:12px;">
+          Les résultats sont affichés uniquement sur cette page — aucun email envoyé.
+          <br>Présente-toi à l'accueil avec ton numéro de participation pour récupérer ton lot.
+        </p>
+      </div>
+
+      <!-- GAGNANTS PRÉCÉDENTS -->
+      <div class="gagnants-section fade-up-delay-3" id="gagnants-section" style="display:none;">
+        <h2 style="font-size: 1.2rem; margin-bottom: 20px;">🏆 Gagnants du mois précédent</h2>
+        <div id="gagnants-list"></div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center; margin-top:48px;">
+        <a href="quiz.html" class="btn btn-primary btn-large">
+          👉 Participer au défi
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Défi Mobilité M'Airidia — Classement anonyme · Aucune donnée personnelle affichée</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // DATE TIRAGE
+    function getLastDayOfMonth() {
+      const now = new Date();
+      const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      return last.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function getDaysLeft() {
+      const now = new Date();
+      const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      return last.getDate() - now.getDate();
+    }
+
+    document.getElementById('tirage-date').textContent = getLastDayOfMonth();
+    document.getElementById('tirage-date-box').textContent = getLastDayOfMonth();
+
+    // DONNÉES DEMO (remplacées par l'API en prod)
+    const DEMO_DATA = {
+      participants: [
+        { pseudo: 'Rapide-Aigle-342', numero: 'MAI-202501-4231', profil: 'multimodal', points: 45, defis: 4 },
+        { pseudo: 'Vert-Lynx-891', numero: 'MAI-202501-1203', profil: 'ecoconnecte', points: 35, defis: 3 },
+        { pseudo: 'Urbain-Faucon-567', numero: 'MAI-202501-7823', profil: 'declencheur', points: 25, defis: 2 },
+        { pseudo: 'Futé-Cerf-112', numero: 'MAI-202501-3341', profil: 'optimiseur', points: 15, defis: 1 },
+        { pseudo: 'Agile-Renard-776', numero: 'MAI-202501-9902', profil: 'explorateur', points: 5, defis: 0 },
+      ],
+      gagnants_precedents: []
+    };
+
+    async function loadClassement() {
+      let data = DEMO_DATA;
+
+      try {
+        const res = await fetch('/api/classement');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.participants && json.participants.length > 0) data = json;
+        }
+      } catch(e) {}
+
+      renderClassement(data);
+    }
+
+    function renderClassement(data) {
+      const sorted = [...data.participants].sort((a, b) => b.points - a.points);
+      const totalDefis = sorted.reduce((s, p) => s + (p.defis || 0), 0);
+      const totalTickets = sorted.reduce((s, p) => s + Math.floor(p.points / 10), 0);
+
+      // Stats
+      document.getElementById('stat-participants').textContent = sorted.length;
+      document.getElementById('stat-defis').textContent = totalDefis;
+      document.getElementById('stat-tickets').textContent = totalTickets;
+      document.getElementById('stat-jours').textContent = getDaysLeft();
+
+      // Podium
+      const top3 = sorted.slice(0, 3);
+      const podiumOrder = top3.length >= 2 ? [top3[1], top3[0], top3[2]].filter(Boolean) : top3;
+      const ranks = top3.length >= 2 ? ['🥈', '🥇', '🥉'] : ['🥇', '🥈', '🥉'];
+
+      if (top3.length > 0) {
+        document.getElementById('podium-section').innerHTML = `
+          <div class="podium fade-up-delay-1">
+            ${podiumOrder.map((p, i) => p ? `
+              <div class="podium-item">
+                <div class="podium-avatar">${PROFILS[p.profil]?.emoji || '👤'}</div>
+                <div class="podium-block">
+                  <div class="podium-rank">${ranks[i]}</div>
+                  <div class="podium-pts">${p.points} pts</div>
+                </div>
+                <div class="podium-pseudo">${p.pseudo}</div>
+                <div class="podium-profil">${PROFILS[p.profil]?.nom || ''}</div>
+              </div>
+            ` : '').join('')}
+          </div>
+        `;
+      }
+
+      // Table
+      if (sorted.length === 0) {
+        document.getElementById('table-container').innerHTML = `
+          <div class="empty-state">
+            <span class="empty-emoji">🚀</span>
+            <p>Sois le premier à participer !</p>
+            <a href="quiz.html" class="btn btn-primary" style="margin-top:16px;">Démarrer le défi</a>
+          </div>
+        `;
+      } else {
+        const rowClass = (i) => i === 0 ? 'tr-gold' : i === 1 ? 'tr-silver' : i === 2 ? 'tr-bronze' : '';
+        document.getElementById('table-container').innerHTML = `
+          <table class="rank-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Pseudo</th>
+                <th>Profil</th>
+                <th>Défis</th>
+                <th style="text-align:right">Points</th>
+                <th style="text-align:right">Tickets</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sorted.map((p, i) => `
+                <tr class="${rowClass(i)}">
+                  <td class="td-rank">${i + 1}</td>
+                  <td class="td-pseudo">${p.pseudo}</td>
+                  <td class="td-profil">${PROFILS[p.profil]?.emoji || ''} ${PROFILS[p.profil]?.nom?.split(' ')[0] || ''}</td>
+                  <td class="td-defis">${p.defis || 0}/5 défis</td>
+                  <td class="td-pts">${p.points}</td>
+                  <td class="td-tickets">🎫 ${Math.floor(p.points / 10)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      // Gagnants précédents
+      if (data.gagnants_precedents && data.gagnants_precedents.length > 0) {
+        document.getElementById('gagnants-section').style.display = 'block';
+        document.getElementById('gagnants-list').innerHTML = data.gagnants_precedents.map(g => `
+          <div class="gagnant-card">
+            <span class="gagnant-emoji">🏆</span>
+            <div>
+              <div class="gagnant-num">${g.numero}</div>
+              <div class="gagnant-lot">${g.lot}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // AUTO-REFRESH toutes les 30 secondes
+    let countdownVal = 30;
+    const countdownEl = document.getElementById('countdown');
+
+    setInterval(() => {
+      countdownVal--;
+      if (countdownEl) countdownEl.textContent = countdownVal;
+      if (countdownVal <= 0) {
+        countdownVal = 30;
+        loadClassement();
+        // Redémarrer l'animation CSS
+        const bar = document.getElementById('refresh-fill');
+        if (bar) {
+          bar.style.animation = 'none';
+          bar.offsetHeight; // reflow
+          bar.style.animation = '';
+        }
+      }
+    }, 1000);
+
+    // Chargement initial
+    loadClassement();
+  </script>
+
+</body>
+</html>

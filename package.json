@@ -1,0 +1,13 @@
+{
+  "name": "mairidia-defi-mobilite",
+  "version": "1.0.0",
+  "description": "Défi Mobilité M'Airidia",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}

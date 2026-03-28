@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choisis ton défi — M'Airidia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .defis-wrapper { padding: 60px 0 100px; }
+
+    .defi-card-full {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .defi-card-full:hover {
+      border-color: rgba(184,245,66,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    .defi-card-full.selected {
+      border-color: var(--vert);
+      background: rgba(184,245,66,0.05);
+    }
+
+    .defi-card-full.suggested {
+      border-color: rgba(184,245,66,0.35);
+    }
+
+    .defi-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .defi-icon-lg {
+      font-size: 2.2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--gris);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .defi-card-full.selected .defi-icon-lg {
+      background: rgba(184,245,66,0.15);
+    }
+
+    .defi-titre {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .defi-pts {
+      margin-left: auto;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      color: var(--vert);
+      font-size: 1.1rem;
+    }
+
+    .defi-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      padding-left: 76px;
+    }
+
+    .defi-preuve {
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-left: 76px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .suggested-tag {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: var(--vert);
+      color: var(--noir);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+    }
+
+    .check-indicator {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .defi-card-full.selected .check-indicator {
+      background: var(--vert);
+      border-color: var(--vert);
+      color: var(--noir);
+    }
+
+    .hashtag-box {
+      background: rgba(184,245,66,0.05);
+      border: 1px solid rgba(184,245,66,0.2);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      margin: 32px 0;
+      text-align: center;
+    }
+
+    .hashtag {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--vert);
+    }
+
+    .btn-valider {
+      width: 100%;
+      justify-content: center;
+      padding: 20px;
+      font-size: 1.05rem;
+      opacity: 0.4;
+      pointer-events: none;
+      transition: all 0.3s;
+    }
+
+    .btn-valider.enabled {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .already-done {
+      display: none;
+      background: rgba(184,245,66,0.08);
+      border: 1px solid rgba(184,245,66,0.3);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      color: var(--vert);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="logo" href="index.html">M'Airidia</a>
+      <span class="badge-header" id="points-header">— pts</span>
+    </div>
+  </header>
+
+  <div class="defis-wrapper">
+    <div class="container">
+
+      <div class="fade-up" style="margin-bottom: 40px;">
+        <span class="tag">Micro-défis</span>
+        <h1 style="font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 16px 0 12px;">
+          Choisis ton <span style="color:var(--vert)">premier changement</span>
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+          Un seul défi à la fois. Réalise-le, poste la preuve, gagne <strong style="color:var(--blanc)">10 points</strong>.
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 8px;">
+          Numéro : <strong id="numero-display" style="color:var(--vert)">—</strong>
+        </p>
+      </div>
+
+      <!-- DÉFIS -->
+      <div id="defis-list" class="fade-up-delay-1"></div>
+
+      <!-- HASHTAG -->
+      <div class="hashtag-box fade-up-delay-2">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Pour valider ton défi, publie ta preuve avec :</p>
+        <div class="hashtag">#DefimobiliteMAiridia</div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
+          + mentionne ton numéro de participation en commentaire ou dans le post
+        </p>
+      </div>
+
+      <!-- BOUTON VALIDER -->
+      <div class="fade-up-delay-2">
+        <button class="btn btn-primary btn-valider" id="btn-valider" onclick="validerDefi()">
+          ✅ Je m'engage sur ce défi
+        </button>
+        <p style="font-size: 0.78rem; color:var(--text-muted); text-align:center; margin-top:12px;">
+          Après avoir posté ta preuve sur les réseaux, reviens ici déclarer ta réalisation.
+        </p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- CHALLENGE 7 JOURS -->
+      <div class="fade-up-delay-3" style="text-align:center; padding: 20px 0 40px;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Tu veux aller encore plus loin ?</p>
+        <a href="challenge7.html" class="btn btn-secondary">
+          🔥 Challenge 7 jours — +30 pts
+        </a>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
+          7 jours de mobilité alternative + vidéo de ton expérience
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Défi Mobilité M'Airidia · <a href="classement.html" style="color:var(--vert)">Classement</a></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    const session = getSession();
+    if (!session.profil) window.location.href = 'quiz.html';
+
+    let selectedDefi = null;
+
+    // Afficher points
+    document.getElementById('points-header').textContent = `${session.points || 5} pts`;
+    document.getElementById('numero-display').textContent = session.numero;
+
+    const profilSuggere = PROFILS[session.profil]?.defi_suggere;
+    const defisRealises = session.defis_realises || [];
+
+    // Générer les cartes
+    const listEl = document.getElementById('defis-list');
+    DEFIS.forEach(defi => {
+      const isSelected = selectedDefi === defi.id;
+      const isSuggested = defi.id === profilSuggere;
+      const isDone = defisRealises.includes(defi.id);
+
+      const card = document.createElement('div');
+      card.className = `defi-card-full fade-up${isSuggested ? ' suggested' : ''}`;
+      card.id = `defi-card-${defi.id}`;
+      card.innerHTML = `
+        ${isSuggested ? `<div class="suggested-tag">⭐ Recommandé pour toi</div>` : ''}
+        <div class="defi-header">
+          <div class="defi-icon-lg">${defi.emoji}</div>
+          <div class="defi-titre">${defi.titre}</div>
+          <div class="defi-pts">+${defi.points} pts</div>
+        </div>
+        <div class="defi-desc">${defi.description}</div>
+        <div class="defi-preuve">
+          📸 <span><strong>Preuve :</strong> ${defi.preuve}</span>
+        </div>
+        ${isDone ? `<div class="already-done" style="display:flex">✅ Déjà réalisé — +${defi.points} pts gagnés</div>` : ''}
+        <div class="check-indicator">${isDone ? '✓' : ''}</div>
+      `;
+
+      if (!isDone) {
+        card.addEventListener('click', () => selectDefi(defi.id));
+      } else {
+        card.style.opacity = '0.6';
+        card.style.cursor = 'default';
+      }
+
+      listEl.appendChild(card);
+    });
+
+    function selectDefi(id) {
+      // Désélectionner tout
+      document.querySelectorAll('.defi-card-full').forEach(c => {
+        c.classList.remove('selected');
+        const check = c.querySelector('.check-indicator');
+        if (check) check.textContent = '';
+      });
+
+      // Sélectionner
+      const card = document.getElementById(`defi-card-${id}`);
+      card.classList.add('selected');
+      const check = card.querySelector('.check-indicator');
+      if (check) check.textContent = '✓';
+
+      selectedDefi = id;
+      document.getElementById('btn-valider').classList.add('enabled');
+    }
+
+    function validerDefi() {
+      if (!selectedDefi) return;
+      const defi = DEFIS.find(d => d.id === selectedDefi);
+
+      // Sauvegarder dans la session
+      session.defi_choisi = selectedDefi;
+      saveSession(session);
+
+      // Rediriger vers confirmation
+      window.location.href = `confirmation.html`;
+    }
+  </script>
+
+</body>
+</html>

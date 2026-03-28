@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ton Profil — Défi Mobilité M'Airidia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .profil-wrapper {
+      padding: 60px 0 100px;
+    }
+
+    .profil-hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .confetti-row {
+      font-size: 2rem;
+      margin-bottom: 24px;
+      animation: fadeUp 0.5s ease;
+    }
+
+    .numero-section {
+      text-align: center;
+      margin: 48px 0;
+    }
+
+    .numero-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-family: 'Syne', sans-serif;
+      margin-bottom: 12px;
+    }
+
+    .numero-copy {
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: all;
+    }
+
+    .numero-copy:hover {
+      box-shadow: 0 0 20px rgba(184,245,66,0.2);
+    }
+
+    .numero-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .scores-bar {
+      margin: 48px 0;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .score-emoji { width: 28px; text-align: center; font-size: 1.1rem; }
+
+    .score-name {
+      width: 160px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .score-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: var(--gris);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease 0.3s;
+    }
+
+    .score-val {
+      width: 30px;
+      text-align: right;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .points-earned {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(184,245,66,0.1);
+      border: 1px solid rgba(184,245,66,0.3);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--vert);
+      font-size: 1rem;
+      margin-top: 20px;
+    }
+
+    .next-section {
+      margin-top: 60px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="logo" href="index.html">M'Airidia</a>
+      <span class="badge-header" id="points-header">+5 points gagnés</span>
+    </div>
+  </header>
+
+  <div class="profil-wrapper">
+    <div class="container">
+
+      <div class="profil-hero fade-up">
+        <div class="confetti-row">🎉</div>
+        <span class="tag">Résultat personnalisé</span>
+        <div style="margin: 20px 0 8px; font-size: 0.9rem; color: var(--text-muted);">Ton profil mobilité</div>
+      </div>
+
+      <!-- PROFIL CARD -->
+      <div class="profil-card fade-up-delay-1" id="profil-card">
+        <span class="profil-emoji" id="profil-emoji">🚶</span>
+        <div class="profil-name" id="profil-name">Chargement...</div>
+        <div class="tag" id="profil-badge" style="margin: 12px auto 20px;">Badge</div>
+        <p id="profil-description" style="color: var(--text-muted); font-size: 0.95rem; max-width: 480px; margin: 0 auto;"></p>
+        <div class="points-earned">✨ +5 points pour le quiz</div>
+      </div>
+
+      <!-- NUMÉRO DE PARTICIPATION -->
+      <div class="numero-section fade-up-delay-2">
+        <div class="numero-label">Ton numéro de participation</div>
+        <div class="numero-badge numero-copy" id="numero-badge" onclick="copyNumero(this)" title="Cliquer pour copier">
+          <span>🎫</span>
+          <span id="numero-display">MAI-000000-0000</span>
+        </div>
+        <p class="numero-hint">Garde ce numéro précieusement — il te servira pour prouver tes défis et pour le tirage au sort.</p>
+        <p class="numero-hint" style="margin-top:6px;">
+          Pseudo : <strong id="pseudo-display" style="color:var(--blanc)">—</strong>
+        </p>
+      </div>
+
+      <!-- DÉTAIL DES SCORES -->
+      <div class="scores-bar fade-up-delay-2">
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px; text-align:center;">Détail de tes scores par profil</p>
+        <div id="scores-bars"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SUITE -->
+      <div class="next-section fade-up-delay-3">
+        <h2 style="font-size: 1.6rem; margin-bottom: 12px;">Prêt(e) à relever<br><span style="color:var(--vert)">ton premier défi ?</span></h2>
+        <p class="lead" style="font-size: 1rem; margin-bottom: 32px;">Choisis un micro-défi et gagne 10 points supplémentaires.</p>
+        <a href="defis.html" class="btn btn-primary btn-large">
+          🎯 Choisir mon micro-défi
+        </a>
+        <p style="margin-top: 16px; font-size: 0.8rem; color: var(--text-muted);">
+          10 pts = 1 ticket de tombola · Tirage fin de mois · Résultats sur <a href="classement.html" style="color:var(--vert)">le classement</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Défi Mobilité M'Airidia — Participation anonyme · <a href="classement.html" style="color:var(--vert)">Voir le classement</a></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    const session = getSession();
+
+    if (!session.profil) {
+      window.location.href = 'quiz.html';
+    }
+
+    const p = PROFILS[session.profil];
+
+    // Afficher le profil
+    document.getElementById('profil-emoji').textContent = p.emoji;
+    document.getElementById('profil-name').textContent = p.nom;
+    document.getElementById('profil-description').textContent = p.description;
+    document.getElementById('profil-badge').textContent = p.badge;
+    document.getElementById('profil-badge').style.color = p.couleur;
+    document.getElementById('profil-card').style.borderColor = p.couleur;
+
+    // Numéro
+    document.getElementById('numero-display').textContent = session.numero;
+    document.getElementById('pseudo-display').textContent = session.pseudo;
+
+    // Barres de scores
+    const maxScore = Math.max(...Object.values(session.scores));
+    const barsHTML = Object.entries(PROFILS).map(([key, profil]) => {
+      const score = session.scores[key] || 0;
+      const pct = maxScore > 0 ? (score / maxScore) * 100 : 0;
+      const isWinner = key === session.profil;
+      return `
+        <div class="score-row">
+          <span class="score-emoji">${profil.emoji}</span>
+          <span class="score-name">${profil.nom.split(' ')[0]}</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar-fill" style="width:0%; background:${isWinner ? profil.couleur : 'rgba(255,255,255,0.15)'};" data-target="${pct}"></div>
+          </div>
+          <span class="score-val" style="color:${isWinner ? profil.couleur : 'var(--text-muted)'}">${score}</span>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('scores-bars').innerHTML = barsHTML;
+
+    // Animer les barres
+    setTimeout(() => {
+      document.querySelectorAll('.score-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.target + '%';
+      });
+    }, 300);
+
+    // Copier le numéro
+    function copyNumero(el) {
+      navigator.clipboard.writeText(session.numero).then(() => {
+        const orig = document.getElementById('numero-display').textContent;
+        document.getElementById('numero-display').textContent = '✓ Copié !';
+        setTimeout(() => document.getElementById('numero-display').textContent = orig, 1500);
+      });
+    }
+
+    // Enregistrer le participant via API
+    fetch('/api/participant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        numero: session.numero,
+        pseudo: session.pseudo,
+        profil: session.profil,
+        points: 5,
+        timestamp: session.timestamp
+      })
+    }).catch(() => {}); // silencieux si pas de backend
+  </script>
+
+</body>
+</html>

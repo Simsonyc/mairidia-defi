@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz — Défi Mobilité M'Airidia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .quiz-wrapper {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 0;
+    }
+
+    .question-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .question-text {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      margin-bottom: 36px;
+      line-height: 1.2;
+    }
+
+    .options-list { margin-bottom: 32px; }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .question-block {
+      display: none;
+    }
+
+    .question-block.active {
+      display: block;
+      animation: fadeUp 0.4s ease forwards;
+    }
+
+    .btn-next {
+      background: var(--vert);
+      color: var(--noir);
+      padding: 14px 36px;
+      border-radius: 100px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      opacity: 0.4;
+      pointer-events: none;
+      transition: all 0.2s;
+    }
+
+    .btn-next.enabled {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .btn-next.enabled:hover {
+      background: #ceff5a;
+      transform: translateY(-2px);
+    }
+
+    .btn-prev {
+      background: transparent;
+      color: var(--text-muted);
+      padding: 14px 20px;
+      border-radius: 100px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .btn-prev:hover {
+      color: var(--blanc);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .score-preview {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .reassurance {
+      background: rgba(184,245,66,0.05);
+      border: 1px solid rgba(184,245,66,0.15);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="logo" href="index.html">M'Airidia</a>
+      <span class="badge-header" id="progression-label">Question 1 / 5</span>
+    </div>
+  </header>
+
+  <div class="quiz-wrapper">
+    <div class="container">
+
+      <!-- PROGRESS BAR -->
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+
+      <!-- REASSURANCE -->
+      <div class="reassurance">
+        <span>💬</span>
+        <span>Réponds spontanément. Il n'y a pas de bonne réponse — juste ton trajet réel.</span>
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-block active" id="q-1">
+        <div class="question-number">Question 1 sur 5</div>
+        <div class="question-text">Quelle est la distance de ton trajet domicile-école ?</div>
+        <div class="options-list">
+          <button class="quiz-option" data-q="q1" data-v="a">
+            <span class="opt-letter">A</span> Moins de 5 km
+          </button>
+          <button class="quiz-option" data-q="q1" data-v="b">
+            <span class="opt-letter">B</span> Entre 5 et 15 km
+          </button>
+          <button class="quiz-option" data-q="q1" data-v="c">
+            <span class="opt-letter">C</span> Entre 15 et 30 km
+          </button>
+          <button class="quiz-option" data-q="q1" data-v="d">
+            <span class="opt-letter">D</span> Plus de 30 km
+          </button>
+        </div>
+        <div class="nav-row">
+          <div></div>
+          <button class="btn-next" id="next-1" onclick="nextQuestion(1)">Suivant →</button>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question-block" id="q-2">
+        <div class="question-number">Question 2 sur 5</div>
+        <div class="question-text">Comment tu te déplaces le plus souvent pour aller en cours ?</div>
+        <div class="options-list">
+          <button class="quiz-option" data-q="q2" data-v="a">
+            <span class="opt-letter">A</span> Voiture seul(e)
+          </button>
+          <button class="quiz-option" data-q="q2" data-v="b">
+            <span class="opt-letter">B</span> Transports en commun
+          </button>
+          <button class="quiz-option" data-q="q2" data-v="c">
+            <span class="opt-letter">C</span> Vélo / trottinette / à pied
+          </button>
+          <button class="quiz-option" data-q="q2" data-v="d">
+            <span class="opt-letter">D</span> Covoiturage
+          </button>
+        </div>
+        <div class="nav-row">
+          <button class="btn-prev" onclick="prevQuestion(2)">← Retour</button>
+          <button class="btn-next" id="next-2" onclick="nextQuestion(2)">Suivant →</button>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question-block" id="q-3">
+        <div class="question-number">Question 3 sur 5</div>
+        <div class="question-text">Ce qui compte le plus pour toi dans un trajet ?</div>
+        <div class="options-list">
+          <button class="quiz-option" data-q="q3" data-v="a">
+            <span class="opt-letter">A</span> Gagner du temps
+          </button>
+          <button class="quiz-option" data-q="q3" data-v="b">
+            <span class="opt-letter">B</span> Réduire mon impact écologique
+          </button>
+          <button class="quiz-option" data-q="q3" data-v="c">
+            <span class="opt-letter">C</span> Dépenser moins
+          </button>
+          <button class="quiz-option" data-q="q3" data-v="d">
+            <span class="opt-letter">D</span> Simplifier ma vie
+          </button>
+        </div>
+        <div class="nav-row">
+          <button class="btn-prev" onclick="prevQuestion(3)">← Retour</button>
+          <button class="btn-next" id="next-3" onclick="nextQuestion(3)">Suivant →</button>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="question-block" id="q-4">
+        <div class="question-number">Question 4 sur 5</div>
+        <div class="question-text">Est-ce que tu as déjà combiné plusieurs modes de transport ?<br><small style="font-weight:400;font-size:0.75em;color:var(--text-muted)">(bus + vélo, train + marche...)</small></div>
+        <div class="options-list">
+          <button class="quiz-option" data-q="q4" data-v="a">
+            <span class="opt-letter">A</span> Jamais / rarement
+          </button>
+          <button class="quiz-option" data-q="q4" data-v="b">
+            <span class="opt-letter">B</span> Oui, déjà essayé une fois
+          </button>
+          <button class="quiz-option" data-q="q4" data-v="c">
+            <span class="opt-letter">C</span> Oui, parfois selon le contexte
+          </button>
+          <button class="quiz-option" data-q="q4" data-v="d">
+            <span class="opt-letter">D</span> Oui, c'est mon mode principal
+          </button>
+        </div>
+        <div class="nav-row">
+          <button class="btn-prev" onclick="prevQuestion(4)">← Retour</button>
+          <button class="btn-next" id="next-4" onclick="nextQuestion(4)">Suivant →</button>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="question-block" id="q-5">
+        <div class="question-number">Question 5 sur 5 — Dernière question !</div>
+        <div class="question-text">Est-ce que tu encourages les autres à changer leurs habitudes de transport ?</div>
+        <div class="options-list">
+          <button class="quiz-option" data-q="q5" data-v="a">
+            <span class="opt-letter">A</span> Non, c'est trop compliqué à organiser
+          </button>
+          <button class="quiz-option" data-q="q5" data-v="b">
+            <span class="opt-letter">B</span> Peut-être si quelqu'un le proposait
+          </button>
+          <button class="quiz-option" data-q="q5" data-v="c">
+            <span class="opt-letter">C</span> Oui, j'en parle déjà autour de moi
+          </button>
+          <button class="quiz-option" data-q="q5" data-v="d">
+            <span class="opt-letter">D</span> Oui, j'ai déjà organisé un covoiturage
+          </button>
+        </div>
+        <div class="nav-row">
+          <button class="btn-prev" onclick="prevQuestion(5)">← Retour</button>
+          <button class="btn-next" id="next-5" onclick="submitQuiz()">Voir mon profil 🎯</button>
+        </div>
+        <p class="score-preview">Tu es à quelques secondes de découvrir ton profil mobilité...</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    const reponses = {};
+    let currentQ = 1;
+
+    // Gestion des options
+    document.querySelectorAll('.quiz-option').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const q = this.dataset.q;
+        const v = this.dataset.v;
+
+        // Désélectionner les autres options de la même question
+        document.querySelectorAll(`.quiz-option[data-q="${q}"]`).forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+
+        reponses[q] = v;
+
+        // Activer le bouton suivant
+        const nextBtn = document.getElementById(`next-${currentQ}`);
+        if (nextBtn) nextBtn.classList.add('enabled');
+      });
+    });
+
+    function updateProgress(q) {
+      const pct = ((q - 1) / 5) * 100;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progression-label').textContent = `Question ${q} / 5`;
+    }
+
+    function nextQuestion(from) {
+      if (!reponses[`q${from}`]) return;
+
+      document.getElementById(`q-${from}`).classList.remove('active');
+      const next = from + 1;
+      document.getElementById(`q-${next}`).classList.add('active');
+      currentQ = next;
+      updateProgress(next);
+      window.scrollTo(0, 0);
+    }
+
+    function prevQuestion(from) {
+      document.getElementById(`q-${from}`).classList.remove('active');
+      const prev = from - 1;
+      document.getElementById(`q-${prev}`).classList.add('active');
+      currentQ = prev;
+      updateProgress(prev);
+
+      // Ré-activer le bouton si déjà répondu
+      const nextBtn = document.getElementById(`next-${prev}`);
+      if (nextBtn && reponses[`q${prev}`]) nextBtn.classList.add('enabled');
+      window.scrollTo(0, 0);
+    }
+
+    function submitQuiz() {
+      if (!reponses.q5) return;
+
+      // Calculer le profil
+      const result = calculerProfil(reponses);
+
+      // Générer numéro et pseudo
+      const numero = genererNumero();
+      const pseudo = genererPseudo();
+
+      // Sauvegarder en session
+      saveSession({
+        reponses,
+        profil: result.profil,
+        scores: result.scores,
+        numero,
+        pseudo,
+        points: 5, // 5 pts pour avoir complété le quiz
+        defis_realises: [],
+        timestamp: new Date().toISOString()
+      });
+
+      // Mettre à jour la barre à 100%
+      document.getElementById('progress-fill').style.width = '100%';
+
+      // Rediriger vers le profil
+      setTimeout(() => {
+        window.location.href = 'profil.html';
+      }, 400);
+    }
+
+    // Init
+    updateProgress(1);
+  </script>
+
+</body>
+</html>

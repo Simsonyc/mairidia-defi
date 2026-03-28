@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Défi confirmé — M'Airidia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .confirm-wrapper {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      align-items: center;
+      padding: 60px 0;
+    }
+
+    .confirm-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .confirm-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--vert), #7eb8f7, var(--vert));
+      background-size: 200%;
+      animation: shimmer 2s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+
+    .big-emoji {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 20px;
+      animation: fadeUp 0.5s ease;
+    }
+
+    .steps-list {
+      text-align: left;
+      margin: 32px 0;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step-item:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--gris);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      color: var(--vert);
+    }
+
+    .step-text { font-size: 0.9rem; line-height: 1.5; }
+    .step-text strong { color: var(--blanc); }
+    .step-text span { color: var(--text-muted); }
+
+    .tombola-info {
+      background: rgba(184,245,66,0.05);
+      border: 1px solid rgba(184,245,66,0.2);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin: 24px 0;
+    }
+
+    .tombola-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+
+    .tombola-row:last-child { margin-bottom: 0; }
+    .tombola-key { color: var(--text-muted); }
+    .tombola-val { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--vert); }
+
+    .share-box {
+      margin-top: 32px;
+      padding: 20px;
+      background: var(--gris);
+      border-radius: var(--radius-sm);
+    }
+
+    .share-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .copy-template {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: var(--blanc);
+      text-align: left;
+      line-height: 1.6;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+
+    .copy-template:hover { border-color: var(--vert); }
+
+    .copy-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a class="logo" href="index.html">M'Airidia</a>
+      <span class="badge-header" id="pts-header">— pts</span>
+    </div>
+  </header>
+
+  <div class="confirm-wrapper">
+    <div class="container">
+      <div class="confirm-card fade-up">
+
+        <span class="big-emoji">🎯</span>
+
+        <span class="tag">Défi accepté !</span>
+        <h1 style="font-size: 1.8rem; margin: 16px 0 8px;" id="defi-titre">Chargement...</h1>
+        <p style="color: var(--text-muted); margin-bottom: 8px;" id="defi-desc"></p>
+
+        <div class="numero-badge" style="margin: 20px auto; display:inline-flex;">
+          <span>🎫</span>
+          <span id="numero-display">—</span>
+        </div>
+
+        <!-- ÉTAPES -->
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <strong>Réalise ton défi</strong><br>
+              <span id="step-preuve-desc">Voir les instructions ci-dessus</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <strong>Poste ta preuve</strong><br>
+              <span>Sur Instagram ou LinkedIn avec <strong style="color:var(--vert)">#DefimobiliteMAiridia</strong> + ton numéro en commentaire</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <strong>Validation par l'équipe</strong><br>
+              <span>L'équipe M'Airidia vérifie et valide ton défi → +10 points crédités</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-text">
+              <strong>Tirage au sort fin de mois</strong><br>
+              <span>Résultats affichés sur la page classement — pas d'email envoyé</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOMBOLA INFO -->
+        <div class="tombola-info">
+          <div class="tombola-row">
+            <span class="tombola-key">Points actuels</span>
+            <span class="tombola-val" id="pts-actuels">5 pts</span>
+          </div>
+          <div class="tombola-row">
+            <span class="tombola-key">Après validation du défi</span>
+            <span class="tombola-val" id="pts-apres">15 pts</span>
+          </div>
+          <div class="tombola-row">
+            <span class="tombola-key">Tickets tombola</span>
+            <span class="tombola-val" id="tickets-count">1 ticket</span>
+          </div>
+          <div class="tombola-row">
+            <span class="tombola-key">Lot garanti si</span>
+            <span class="tombola-val">5 défis réalisés</span>
+          </div>
+        </div>
+
+        <!-- TEMPLATE À COPIER -->
+        <div class="share-box">
+          <p class="share-text">📋 Copie ce texte pour ton post :</p>
+          <div class="copy-template" id="copy-template" onclick="copyTemplate()">
+            Je relève le Défi Mobilité M'Airidia 🚀<br>
+            Mon défi : <span id="template-defi">—</span><br>
+            Mon numéro : <span id="template-numero">—</span><br>
+            #DefimobiliteMAiridia @mairidia
+          </div>
+          <p class="copy-hint">👆 Clique pour copier</p>
+        </div>
+
+        <!-- ACTIONS -->
+        <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; justify-content:center;">
+          <a href="defis.html" class="btn btn-secondary">
+            Choisir un autre défi
+          </a>
+          <a href="classement.html" class="btn btn-primary">
+            Voir le classement 🏆
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Défi Mobilité M'Airidia · <a href="classement.html" style="color:var(--vert)">Classement</a></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    const session = getSession();
+    if (!session.profil) window.location.href = 'quiz.html';
+
+    const defi = DEFIS.find(d => d.id === session.defi_choisi) || DEFIS[0];
+    const pts = session.points || 5;
+    const ptsApres = pts + 10;
+    const tickets = Math.floor(ptsApres / 10);
+
+    document.getElementById('defi-titre').textContent = `${defi.emoji} ${defi.titre}`;
+    document.getElementById('defi-desc').textContent = defi.description;
+    document.getElementById('step-preuve-desc').textContent = defi.preuve;
+    document.getElementById('numero-display').textContent = session.numero;
+    document.getElementById('pts-header').textContent = `${pts} pts`;
+    document.getElementById('pts-actuels').textContent = `${pts} pts`;
+    document.getElementById('pts-apres').textContent = `${ptsApres} pts`;
+    document.getElementById('tickets-count').textContent = `${tickets} ticket${tickets > 1 ? 's' : ''}`;
+    document.getElementById('template-defi').textContent = defi.titre;
+    document.getElementById('template-numero').textContent = session.numero;
+
+    function copyTemplate() {
+      const text = `Je relève le Défi Mobilité M'Airidia 🚀\nMon défi : ${defi.titre}\nMon numéro : ${session.numero}\n#DefimobiliteMAiridia @mairidia`;
+      navigator.clipboard.writeText(text).then(() => {
+        const el = document.getElementById('copy-template');
+        el.style.borderColor = 'var(--vert)';
+        el.style.color = 'var(--vert)';
+        setTimeout(() => {
+          el.style.borderColor = '';
+          el.style.color = '';
+        }, 1500);
+      });
+    }
+  </script>
+
+</body>
+</html>
