@@ -2,216 +2,76 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Défi Mobilité M'Airidia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#413692">
+  <title>Défi Mobilité M'Airidia × CESI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .hero {
-      min-height: calc(100vh - 70px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 80px 0;
-      position: relative;
+.head-evt{display:none}
+    .hero{padding-top:36px;padding-bottom:44px;display:grid;gap:36px}
+    .hero .display{margin-bottom:18px}
+    .hero .lead{max-width:34ch;margin-bottom:24px}
+    .faits{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:28px;font-weight:500}
+    .faits li{display:flex;align-items:center;gap:8px}
+    .faits li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c)}
+    .note{font-size:.9rem;color:var(--texte-2);margin-top:16px}
+
+    /* Les 5 profils en colonnes de couleur, écho aux lettres a-i-r du logo */
+    .profils{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:end;height:180px}
+    .profils .col{
+      display:flex;justify-content:center;align-items:flex-start;padding-top:10px;
+      height:var(--h);border-radius:999px 999px 14px 14px;background:var(--c);color:var(--bleu);
+      transform-origin:bottom;animation:pousse .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d);
     }
+    .profils .col .ico{width:20px;height:20px}
+    @keyframes pousse{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+    .profils-noms{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px;font-size:.7rem;line-height:1.2;text-align:center;color:var(--texte-2)}
 
-    .hero-bg {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(184,245,66,0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(255,107,53,0.05) 0%, transparent 50%);
-      pointer-events: none;
+    .fond-doux{background:var(--fond-doux)}
+    .intro{color:var(--texte-2);max-width:56ch;margin:10px 0 28px}
+
+    .parcours{list-style:none;counter-reset:etape;border-top:2px solid var(--bleu);display:grid}
+    .parcours li{counter-increment:etape;display:grid;grid-template-columns:40px 1fr;gap:4px 14px;padding:16px 0;border-bottom:1px solid var(--trait)}
+    .parcours li::before{content:counter(etape);grid-row:span 2;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--c);color:#fff;font-weight:800}
+    .parcours strong{font-size:1.02rem;align-self:end}
+    .parcours span{color:var(--texte-2);font-size:.92rem}
+
+    .bareme{display:grid;gap:12px}
+    .bareme div{background:var(--fond-doux);border-radius:var(--r-lg);padding:18px 20px;border-left:6px solid var(--c);display:flex;align-items:baseline;gap:14px}
+    .bareme b{font-size:1.9rem;font-weight:800;line-height:1;min-width:3.2ch}
+    .bareme p{color:var(--texte-2);font-size:.95rem}
+
+    .lots{list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+    .lots li{border:1.5px solid var(--trait);border-radius:999px;padding:10px 18px;font-weight:500}
+    .lots small{color:var(--texte-2);font-weight:400;margin-left:6px;font-size:.85rem}
+
+    .final{background:var(--orange);color:#fff}
+    .final h2{color:#fff;max-width:16ch;margin-bottom:24px}
+    .final .btn-primary{background:#fff;color:var(--bleu);border-color:#fff}
+    .final .btn-primary:hover{background:var(--fond-doux)}
+    .final p{margin-top:14px;font-size:.95rem}
+
+    @media (min-width:420px){.head-evt{display:inline-flex}}
+    @media (min-width:640px){
+      .hero{padding-top:56px;padding-bottom:64px}
+      .profils{height:240px;gap:10px}
+      .profils-noms{font-size:.78rem}
+      .parcours{grid-template-columns:1fr 1fr;column-gap:28px}
+      .bareme{grid-template-columns:1fr 1fr;gap:16px}
+      .bareme div{flex-direction:column;gap:8px}
+      .bareme b{font-size:2.2rem}
     }
-
-    .tag-line {
-      margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      margin-bottom: 28px;
-    }
-
-    .hero h1 .accent { color: var(--vert); }
-
-    .hero-sub {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 520px;
-      margin-bottom: 48px;
-      font-weight: 300;
-    }
-
-    .promise-grid {
-      display: flex;
-      gap: 32px;
-      margin-bottom: 48px;
-      flex-wrap: wrap;
-    }
-
-    .promise-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .promise-item .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--vert);
-      flex-shrink: 0;
-    }
-
-    .cta-group {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .micro-text {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 16px;
-      font-style: italic;
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      animation: pulse 2s infinite;
-    }
-
-    .scroll-arrow {
-      width: 20px;
-      height: 20px;
-      border-right: 2px solid var(--text-muted);
-      border-bottom: 2px solid var(--text-muted);
-      transform: rotate(45deg);
-    }
-
-    /* HOW IT WORKS */
-    .steps-section { padding: 80px 0; }
-
-    .section-label {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--vert);
-      margin-bottom: 16px;
-    }
-
-    .parcours-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 48px;
-    }
-
-    .parcours-step {
-      padding: 28px 24px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      position: relative;
-    }
-
-    .parcours-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: rgba(184,245,66,0.15);
-      line-height: 1;
-      margin-bottom: 12px;
-    }
-
-    .parcours-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-    }
-
-    .parcours-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* REWARDS */
-    .rewards-section {
-      padding: 80px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .rewards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-top: 40px;
-    }
-
-    .reward-card {
-      text-align: center;
-      padding: 28px 20px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-
-    .reward-emoji { font-size: 2rem; margin-bottom: 12px; display: block; }
-    .reward-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
-    .reward-detail { font-size: 0.78rem; color: var(--text-muted); }
-
-    .mechanique-box {
-      margin-top: 48px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 640px) {
-      .mechanique-box { grid-template-columns: 1fr; }
-      .parcours-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .meca-item {
-      padding: 20px 24px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .meca-val {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--vert);
-      flex-shrink: 0;
-    }
-
-    .meca-label { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
-
-    /* CTA FINAL */
-    .cta-final {
-      padding: 100px 0;
-      text-align: center;
-      border-top: 1px solid var(--border);
+    @media (min-width:960px){
+      .hero{grid-template-columns:1.2fr .8fr;gap:64px;align-items:center;padding-top:80px;padding-bottom:80px}
+      .profils{height:320px}
+      .parcours{grid-template-columns:repeat(4,1fr)}
+      .parcours li{grid-template-columns:1fr;padding:22px 20px 26px 0}
+      .parcours li::before{grid-row:auto;margin-bottom:10px}
+      .bareme{grid-template-columns:repeat(4,1fr)}
+      .final .container-wide{display:flex;justify-content:space-between;align-items:center;gap:40px}
+      .final h2{margin-bottom:0}
     }
   </style>
 </head>
@@ -219,181 +79,107 @@
 
   <header class="site-header">
     <div class="inner">
-      <a class="logo" href="index.html">M'Airidia</a>
-      <span class="badge-header">Défi Mobilité 2026</span>
+      <a class="duo" href="index.html" aria-label="Accueil du Défi Mobilité">
+        <img class="logo-m" src="img/logo-mairidia.png" alt="M'Airidia, une mobilité engagée pour votre quartier">
+        <span class="sep" aria-hidden="true"></span>
+        <img class="logo-cesi" src="img/logo-cesi.png" alt="CESI École d'ingénieurs">
+      </a>
+      <span class="head-badge head-evt">Défi Mobilité 2026</span>
     </div>
+    <div class="ruban" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
   </header>
 
-  <div class="hero-bg"></div>
-
-  <section class="hero">
-    <div class="container">
-      <div class="tag-line fade-up">
-        <span class="tag">🏆 Tirage au sort chaque mois</span>
+  <main>
+    <div class="container-wide hero">
+      <div>
+        <h1 class="display">Quel est ton profil mobilité&nbsp;?</h1>
+        <p class="lead">Cinq questions sur ton trajet réel, un profil, un premier petit changement. Et un tirage au sort chaque mois.</p>
+        <ul class="faits">
+          <li style="--c:var(--orange)">5 questions</li>
+          <li style="--c:var(--vert-clair)">2 minutes</li>
+          <li style="--c:var(--bleu-clair)">Profil personnalisé</li>
+          <li style="--c:var(--turquoise)">Lots à gagner</li>
+        </ul>
+        <div class="btn-row">
+          <a href="quiz.html" class="btn btn-primary btn-large">Je démarre le défi</a>
+          <a href="classement.html" class="btn btn-secondary">Voir le classement</a>
+        </div>
+        <p class="note">Il n'y a pas de bonne réponse. Juste ton trajet réel.</p>
       </div>
-
-      <h1 class="display fade-up-delay-1">
-        Quel est ton<br>
-        <span class="accent">profil mobilité ?</span>
-      </h1>
-
-      <p class="hero-sub fade-up-delay-2">
-        Réponds à 5 questions. Découvre ton profil. Choisis ton premier micro-changement.
-        Et participe automatiquement au tirage au sort.
-      </p>
-
-      <div class="promise-grid fade-up-delay-2">
-        <div class="promise-item"><span class="dot"></span> 5 questions</div>
-        <div class="promise-item"><span class="dot"></span> 2 minutes</div>
-        <div class="promise-item"><span class="dot"></span> Profil personnalisé</div>
-        <div class="promise-item"><span class="dot"></span> Des cadeaux à gagner</div>
-      </div>
-
-      <div class="cta-group fade-up-delay-3">
-        <a href="quiz.html" class="btn btn-primary btn-large">
-          👉 Je démarre le défi
-        </a>
-        <a href="classement.html" class="btn btn-secondary">
-          Voir le classement
-        </a>
-      </div>
-
-      <p class="micro-text fade-up-delay-3">
-        Réponds spontanément. Il n'y a pas de bonne réponse — juste ton trajet réel.
-      </p>
-    </div>
-
-    <div class="scroll-hint">
-      <span>Découvrir</span>
-      <div class="scroll-arrow"></div>
-    </div>
-  </section>
-
-  <!-- PARCOURS -->
-  <section class="steps-section">
-    <div class="container-wide">
-      <p class="section-label">Comment ça marche</p>
-      <h2 style="font-size: 2rem;">Le parcours en 8 étapes</h2>
-
-      <div class="parcours-grid">
-        <div class="parcours-step">
-          <div class="parcours-num">01</div>
-          <div class="parcours-title">Scan QR</div>
-          <div class="parcours-desc">Tu arrives ici depuis le campus</div>
+      <div aria-label="Les cinq profils mobilité">
+        <div class="profils">
+          <div class="col" style="--c:var(--bleu-clair);--h:58%;--d:.05s"><span data-ico="boussole"></span></div>
+          <div class="col" style="--c:var(--jaune);--h:82%;--d:.13s"><span data-ico="eclair"></span></div>
+          <div class="col" style="--c:var(--vert-clair);--h:100%;--d:.21s"><span data-ico="feuille"></span></div>
+          <div class="col" style="--c:var(--turquoise);--h:70%;--d:.29s"><span data-ico="multimodal"></span></div>
+          <div class="col" style="--c:var(--orange);--h:88%;--d:.37s"><span data-ico="megaphone"></span></div>
         </div>
-        <div class="parcours-step">
-          <div class="parcours-num">02</div>
-          <div class="parcours-title">Quiz 5 questions</div>
-          <div class="parcours-desc">Ton trajet réel, sans jugement</div>
-        </div>
-        <div class="parcours-step">
-          <div class="parcours-num">03</div>
-          <div class="parcours-title">Profil mobilité</div>
-          <div class="parcours-desc">Découvre qui tu es vraiment</div>
-        </div>
-        <div class="parcours-step">
-          <div class="parcours-num">04</div>
-          <div class="parcours-title">Micro-défi</div>
-          <div class="parcours-desc">Choisis ton premier changement</div>
-        </div>
-        <div class="parcours-step">
-          <div class="parcours-num">05</div>
-          <div class="parcours-title">Preuve + points</div>
-          <div class="parcours-desc">Post réseaux + tag = 10 pts</div>
-        </div>
-        <div class="parcours-step">
-          <div class="parcours-num">06</div>
-          <div class="parcours-title">Tirage au sort</div>
-          <div class="parcours-desc">1 ticket = 10 points, fin de mois</div>
-        </div>
-        <div class="parcours-step">
-          <div class="parcours-num">07</div>
-          <div class="parcours-title">Challenge 7 jours</div>
-          <div class="parcours-desc">Pour aller encore plus loin</div>
-        </div>
-        <div class="parcours-step">
-          <div class="parcours-num">08</div>
-          <div class="parcours-title">Résultats publics</div>
-          <div class="parcours-desc">Classement affiché sur le campus</div>
-        </div>
+        <div class="profils-noms"><span>Explorateur</span><span>Optimiseur</span><span>Éco-connecté</span><span>Multimodal</span><span>Déclencheur</span></div>
       </div>
     </div>
-  </section>
 
-  <!-- RÉCOMPENSES -->
-  <section class="rewards-section">
-    <div class="container-wide">
-      <p class="section-label">Ce que tu peux gagner</p>
-      <h2 style="font-size: 2rem;">Des lots chaque mois</h2>
+    <section class="fond-doux">
+      <div class="container-wide">
+        <h2>Le parcours en 8 étapes</h2>
+        <p class="intro">Du QR code scanné sur le campus jusqu'aux résultats publiés.</p>
+        <ol class="parcours">
+          <li style="--c:var(--bleu)"><strong>Scan du QR code</strong><span>Tu arrives ici depuis le campus</span></li>
+          <li style="--c:var(--bleu)"><strong>Quiz de 5 questions</strong><span>Ton trajet réel, sans jugement</span></li>
+          <li style="--c:var(--bleu)"><strong>Profil mobilité</strong><span>Découvre comment tu te déplaces</span></li>
+          <li style="--c:var(--orange)"><strong>Micro-défi</strong><span>Choisis ton premier changement</span></li>
+          <li style="--c:var(--orange)"><strong>Preuve et points</strong><span>Un post avec le hashtag : 10 points</span></li>
+          <li style="--c:var(--orange)"><strong>Tirage au sort</strong><span>10 points = 1 ticket, en fin de mois</span></li>
+          <li style="--c:var(--vert-fonce)"><strong>Challenge 7 jours</strong><span>Pour aller plus loin</span></li>
+          <li style="--c:var(--vert-fonce)"><strong>Résultats publics</strong><span>Classement affiché sur le campus</span></li>
+        </ol>
+      </div>
+    </section>
 
-      <div class="rewards-grid">
-        <div class="reward-card">
-          <span class="reward-emoji">🎬</span>
-          <div class="reward-name">2 places de cinéma</div>
-          <div class="reward-detail">Partenaires locaux</div>
+    <section>
+      <div class="container-wide">
+        <h2>Comment tu gagnes des points</h2>
+        <p class="intro">Chaque tranche de 10 points te donne un ticket pour le tirage du mois.</p>
+        <div class="bareme">
+          <div style="--c:var(--orange)"><b>+5</b><p>pour le quiz complété</p></div>
+          <div style="--c:var(--vert-clair)"><b>+10</b><p>par micro-défi réalisé et validé</p></div>
+          <div style="--c:var(--bleu-clair)"><b>+30</b><p>pour le Challenge 7 jours</p></div>
+          <div style="--c:var(--turquoise)"><b>5</b><p>défis réalisés : un lot t'est garanti</p></div>
         </div>
-        <div class="reward-card">
-          <span class="reward-emoji">🌮</span>
-          <div class="reward-name">Menu Food Truck</div>
-          <div class="reward-detail">Sandwich + boisson</div>
-        </div>
-        <div class="reward-card">
-          <span class="reward-emoji">☕</span>
-          <div class="reward-name">Pause café</div>
-          <div class="reward-detail">BDE campus</div>
-        </div>
-        <div class="reward-card">
-          <span class="reward-emoji">🎧</span>
-          <div class="reward-name">Casque Bluetooth</div>
-          <div class="reward-detail">Bonus mensuel</div>
-        </div>
-        <div class="reward-card">
-          <span class="reward-emoji">🎁</span>
-          <div class="reward-name">Carte cadeau FNAC</div>
-          <div class="reward-detail">10–20€</div>
+        <h2 style="margin-top:56px">Les lots du mois</h2>
+        <p class="intro">Offerts par nos partenaires locaux et le BDE.</p>
+        <ul class="lots">
+          <li>2 places de cinéma<small>partenaires locaux</small></li>
+          <li>Menu food truck<small>sandwich et boisson</small></li>
+          <li>Pause café<small>BDE campus</small></li>
+          <li>Casque Bluetooth<small>bonus mensuel</small></li>
+          <li>Carte cadeau FNAC<small>10 à 20 €</small></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="container-wide">
+        <h2>Prêt ou prête à relever le défi&nbsp;?</h2>
+        <div>
+          <a href="quiz.html" class="btn btn-primary btn-large">Découvrir mon profil mobilité</a>
+          <p>Aucune donnée personnelle stockée : participation anonyme par numéro unique.</p>
         </div>
       </div>
-
-      <div class="mechanique-box">
-        <div class="meca-item">
-          <div class="meca-val">+5</div>
-          <div class="meca-label">points pour avoir<br>complété le quiz</div>
-        </div>
-        <div class="meca-item">
-          <div class="meca-val">+10</div>
-          <div class="meca-label">points par micro-défi<br>réalisé et validé</div>
-        </div>
-        <div class="meca-item">
-          <div class="meca-val">×1</div>
-          <div class="meca-label">ticket de tombola<br>par tranche de 10 points</div>
-        </div>
-        <div class="meca-item">
-          <div class="meca-val">🏆</div>
-          <div class="meca-label">Lot garanti si<br>5 défis réalisés</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA FINAL -->
-  <section class="cta-final">
-    <div class="container">
-      <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Prêt(e) à<br><span style="color:var(--vert)">relever le défi ?</span></h2>
-      <p class="lead" style="margin-bottom: 40px;">2 minutes. Zéro jugement. Juste ton trajet réel.</p>
-      <a href="quiz.html" class="btn btn-primary btn-large">
-        👉 Découvrir mon profil mobilité
-      </a>
-      <p style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
-        Aucune donnée personnelle stockée — participation anonyme par numéro unique.
-      </p>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <footer>
-    <div class="container">
-      <p>Défi Mobilité M'Airidia — Projet étudiant · Résultats publiés sur <a href="classement.html" style="color:var(--vert)">la page classement</a></p>
+    <div class="container-wide pied">
+      <div class="duo">
+        <img class="logo-m" src="img/logo-mairidia.png" alt="M'Airidia">
+        <span class="sep" aria-hidden="true"></span>
+        <img class="logo-cesi" src="img/logo-cesi.png" alt="CESI École d'ingénieurs">
+      </div>
+      <p>Défi Mobilité, un projet commun M'Airidia et CESI École d'ingénieurs. Résultats publiés sur <a href="classement.html">la page classement</a>.</p>
     </div>
   </footer>
+
+  <script src="js/app.js"></script>
 
 </body>
 </html>

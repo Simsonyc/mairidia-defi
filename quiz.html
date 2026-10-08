@@ -2,115 +2,36 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#413692">
   <title>Quiz — Défi Mobilité M'Airidia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .quiz-wrapper {
-      min-height: calc(100vh - 70px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 60px 0;
-    }
-
-    .question-number {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .question-text {
-      font-size: clamp(1.3rem, 3vw, 1.8rem);
-      font-weight: 800;
-      font-family: 'Syne', sans-serif;
-      margin-bottom: 36px;
-      line-height: 1.2;
-    }
-
-    .options-list { margin-bottom: 32px; }
-
-    .nav-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 16px;
-    }
-
-    .question-block {
-      display: none;
-    }
-
-    .question-block.active {
-      display: block;
-      animation: fadeUp 0.4s ease forwards;
-    }
-
-    .btn-next {
-      background: var(--vert);
-      color: var(--noir);
-      padding: 14px 36px;
-      border-radius: 100px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      border: none;
-      opacity: 0.4;
-      pointer-events: none;
-      transition: all 0.2s;
-    }
-
-    .btn-next.enabled {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .btn-next.enabled:hover {
-      background: #ceff5a;
-      transform: translateY(-2px);
-    }
-
-    .btn-prev {
-      background: transparent;
-      color: var(--text-muted);
-      padding: 14px 20px;
-      border-radius: 100px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-    }
-
-    .btn-prev:hover {
-      color: var(--blanc);
-      border-color: rgba(255,255,255,0.2);
-    }
-
-    .score-preview {
-      margin-top: 12px;
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-style: italic;
-    }
-
-    .reassurance {
-      background: rgba(184,245,66,0.05);
-      border: 1px solid rgba(184,245,66,0.15);
-      border-radius: var(--radius-sm);
-      padding: 14px 18px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
+.quiz-wrapper{padding:24px 0 40px}
+    .reassurance{display:flex;gap:10px;align-items:flex-start;background:var(--fond-doux);border-radius:var(--r-md);padding:12px 16px;font-size:.92rem;color:var(--texte-2);margin-bottom:24px}
+    .reassurance .ico{width:20px;height:20px;color:var(--bleu);margin-top:2px}
+    .question-number{font-size:.9rem;font-weight:700;color:var(--texte-2);margin-bottom:8px}
+    .question-text{font-size:clamp(1.35rem,6vw,1.9rem);font-weight:800;line-height:1.2;margin-bottom:24px}
+    .q-precision{display:block;font-weight:400;font-size:.95rem;color:var(--texte-2);margin-top:6px}
+    .options-list{margin-bottom:20px}
+    .question-block{display:none}
+    .question-block.active{display:block;animation:fadeUp .35s ease both}
+    .nav-row{display:flex;gap:10px;align-items:center}
+    .nav-row>div:empty{display:none}
+    .btn-next,.btn-prev{min-height:54px;border-radius:999px;font-weight:700;font-size:1rem;cursor:pointer;border:2px solid var(--bleu);padding:12px 22px;transition:background .15s,opacity .15s}
+    .btn-next{flex:1;background:var(--bleu);color:#fff;opacity:.35;pointer-events:none}
+    .btn-next.enabled{opacity:1;pointer-events:auto}
+    .btn-next.enabled:hover{background:var(--bleu-fonce);border-color:var(--bleu-fonce)}
+    .btn-prev{background:#fff;color:var(--bleu)}
+    .btn-prev:hover{background:var(--fond-doux)}
+    .score-preview{margin-top:14px;text-align:center;font-size:.9rem;color:var(--texte-2)}
+    @media (min-width:640px){
+      .quiz-wrapper{padding:48px 0 72px}
+      .nav-row{justify-content:space-between}
+      .nav-row>div:empty{display:block}
+      .btn-next{flex:0 0 auto;padding:12px 36px}
     }
   </style>
 </head>
@@ -118,12 +39,17 @@
 
   <header class="site-header">
     <div class="inner">
-      <a class="logo" href="index.html">M'Airidia</a>
-      <span class="badge-header" id="progression-label">Question 1 / 5</span>
+      <a class="duo" href="index.html" aria-label="Accueil du Défi Mobilité">
+        <img class="logo-m" src="img/logo-mairidia.png" alt="M'Airidia, une mobilité engagée pour votre quartier">
+        <span class="sep" aria-hidden="true"></span>
+        <img class="logo-cesi" src="img/logo-cesi.png" alt="CESI École d'ingénieurs">
+      </a>
+      <span class="head-badge" id="progression-label">Question 1 / 5</span>
     </div>
+    <div class="ruban" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
   </header>
 
-  <div class="quiz-wrapper">
+  <main class="quiz-wrapper">
     <div class="container">
 
       <!-- PROGRESS BAR -->
@@ -133,7 +59,7 @@
 
       <!-- REASSURANCE -->
       <div class="reassurance">
-        <span>💬</span>
+        <span data-ico="bulle"></span>
         <span>Réponds spontanément. Il n'y a pas de bonne réponse — juste ton trajet réel.</span>
       </div>
 
@@ -157,7 +83,7 @@
         </div>
         <div class="nav-row">
           <div></div>
-          <button class="btn-next" id="next-1" onclick="nextQuestion(1)">Suivant →</button>
+          <button class="btn-next" id="next-1" onclick="nextQuestion(1)">Suivant</button>
         </div>
       </div>
 
@@ -180,8 +106,8 @@
           </button>
         </div>
         <div class="nav-row">
-          <button class="btn-prev" onclick="prevQuestion(2)">← Retour</button>
-          <button class="btn-next" id="next-2" onclick="nextQuestion(2)">Suivant →</button>
+          <button class="btn-prev" onclick="prevQuestion(2)">Retour</button>
+          <button class="btn-next" id="next-2" onclick="nextQuestion(2)">Suivant</button>
         </div>
       </div>
 
@@ -204,15 +130,15 @@
           </button>
         </div>
         <div class="nav-row">
-          <button class="btn-prev" onclick="prevQuestion(3)">← Retour</button>
-          <button class="btn-next" id="next-3" onclick="nextQuestion(3)">Suivant →</button>
+          <button class="btn-prev" onclick="prevQuestion(3)">Retour</button>
+          <button class="btn-next" id="next-3" onclick="nextQuestion(3)">Suivant</button>
         </div>
       </div>
 
       <!-- Q4 -->
       <div class="question-block" id="q-4">
         <div class="question-number">Question 4 sur 5</div>
-        <div class="question-text">Est-ce que tu as déjà combiné plusieurs modes de transport ?<br><small style="font-weight:400;font-size:0.75em;color:var(--text-muted)">(bus + vélo, train + marche...)</small></div>
+        <div class="question-text">Est-ce que tu as déjà combiné plusieurs modes de transport ?<small class="q-precision">(bus + vélo, train + marche...)</small></div>
         <div class="options-list">
           <button class="quiz-option" data-q="q4" data-v="a">
             <span class="opt-letter">A</span> Jamais / rarement
@@ -228,8 +154,8 @@
           </button>
         </div>
         <div class="nav-row">
-          <button class="btn-prev" onclick="prevQuestion(4)">← Retour</button>
-          <button class="btn-next" id="next-4" onclick="nextQuestion(4)">Suivant →</button>
+          <button class="btn-prev" onclick="prevQuestion(4)">Retour</button>
+          <button class="btn-next" id="next-4" onclick="nextQuestion(4)">Suivant</button>
         </div>
       </div>
 
@@ -252,14 +178,14 @@
           </button>
         </div>
         <div class="nav-row">
-          <button class="btn-prev" onclick="prevQuestion(5)">← Retour</button>
-          <button class="btn-next" id="next-5" onclick="submitQuiz()">Voir mon profil 🎯</button>
+          <button class="btn-prev" onclick="prevQuestion(5)">Retour</button>
+          <button class="btn-next" id="next-5" onclick="submitQuiz()">Voir mon profil</button>
         </div>
         <p class="score-preview">Tu es à quelques secondes de découvrir ton profil mobilité...</p>
       </div>
 
     </div>
-  </div>
+  </main>
 
   <script src="js/app.js"></script>
   <script>

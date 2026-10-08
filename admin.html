@@ -2,382 +2,106 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#413692">
   <title>Admin — Défi Mobilité M'Airidia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .admin-wrapper { padding: 40px 0 80px; }
+.login-screen{min-height:calc(100vh - 140px);display:flex;align-items:center;justify-content:center;padding:32px 20px}
+    .login-card{width:100%;max-width:420px;background:#fff;border:1.5px solid var(--trait);border-radius:var(--r-lg);padding:32px 20px;text-align:center}
+    .login-card .pastille{margin:0 auto 16px}
+    .login-card h1{font-size:1.6rem;margin-bottom:6px}
+    .login-card p{color:var(--texte-2);font-size:.95rem;margin-bottom:22px}
+    .login-card .input-field{margin-bottom:14px}
+    .login-card .note{font-size:.8rem;margin:16px 0 0}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--fond-doux);padding:1px 6px;border-radius:6px}
 
-    /* LOGIN */
-    .login-screen {
-      min-height: calc(100vh - 70px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .admin-wrapper{padding:28px 0 64px}
+    .admin-titre{margin-bottom:24px}
+    .admin-titre h1{font-size:clamp(1.7rem,7vw,2.4rem);margin-bottom:6px}
+    .admin-titre p{color:var(--texte-2);font-size:.92rem;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+    .lien-action{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--bleu);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:36px}
+    .lien-action .ico{width:16px;height:16px}
 
-    .login-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
+    .stats-admin{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+    .stat-admin{background:var(--fond-doux);border-radius:var(--r-md);padding:14px 16px;border-top:5px solid var(--c)}
+    .stat-admin:last-child{grid-column:1/-1}
+    .stat-admin-val{font-size:1.8rem;font-weight:800;line-height:1}
+    .stat-admin-label{font-size:.82rem;color:var(--texte-2);margin-top:6px}
 
-    .login-card h2 { margin-bottom: 8px; font-size: 1.5rem; }
-    .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; }
+    /* Onglets défilants sur mobile */
+    .tab-bar{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -20px 24px;padding:0 20px 4px}
+    .tab-bar::-webkit-scrollbar{display:none}
+    .tab-btn{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--trait);background:#fff;color:var(--bleu);font-weight:700;font-size:.92rem;cursor:pointer;white-space:nowrap}
+    .tab-btn .ico{width:18px;height:18px}
+    .tab-btn.active{background:var(--bleu);border-color:var(--bleu);color:#fff}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
 
-    .input-field {
-      width: 100%;
-      background: var(--gris);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 14px 18px;
-      color: var(--blanc);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-      margin-bottom: 16px;
-    }
+    .search-row{display:grid;gap:10px;margin-bottom:16px}
+    .validation-table td,.validation-table th{white-space:nowrap}
+    .td-num{font-variant-numeric:tabular-nums;font-size:.9rem}
+    .td-pts{font-weight:800}
+    .profil-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:999px;font-size:.85rem;font-weight:700;background:color-mix(in srgb,var(--c,var(--bleu)) 22%,#fff)}
+    .profil-chip .ico{width:16px;height:16px}
+    .garanti{font-weight:800;color:var(--succes)}
+    .btn-valider-defi{min-height:40px;padding:6px 14px;border-radius:999px;border:2px solid var(--bleu);background:var(--bleu);color:#fff;font-weight:700;font-size:.85rem;cursor:pointer}
+    .btn-valider-defi:hover{background:var(--bleu-fonce)}
+    .btn-danger{min-height:40px;padding:6px 14px;border-radius:999px;border:2px solid var(--erreur);background:#fff;color:var(--erreur);font-weight:700;font-size:.85rem;cursor:pointer}
+    .btn-danger:hover{background:color-mix(in srgb,var(--erreur) 8%,#fff)}
 
-    .input-field:focus { border-color: var(--vert); }
-    .input-field.error { border-color: #ff4444; }
+    .manual-form{margin-bottom:20px}
+    .manual-form h2,.card h2,.card h3{font-size:1.2rem;margin-bottom:6px}
+    .manual-form .muted{font-size:.92rem;margin-bottom:20px}
+    .form-row{display:grid;gap:14px;margin-bottom:14px}
+    .form-group label{display:block;margin-bottom:6px}
+    .verif-row{display:grid;gap:10px;margin-top:12px}
+    .check-ok{display:flex;gap:14px;align-items:center;background:var(--fond-doux);border-left:6px solid var(--succes);border-radius:var(--r-md);padding:14px 16px}
+    .check-ok .num{font-variant-numeric:tabular-nums;font-size:.9rem}
+    .check-ok .meta{font-size:.88rem;color:var(--texte-2);margin-top:2px}
+    .check-ko{background:color-mix(in srgb,var(--erreur) 7%,#fff);border-left:6px solid var(--erreur);border-radius:var(--r-md);padding:12px 16px;color:var(--erreur);font-size:.92rem}
 
-    /* TABS */
-    .tab-bar {
-      display: flex;
-      gap: 4px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 4px;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-    }
+    .tirage-section{background:var(--fond-doux);border-radius:var(--r-lg);padding:28px 18px;text-align:center}
+    .tirage-section .pastille{margin:0 auto 14px}
+    .tirage-section h2{margin-bottom:8px}
+    .tirage-section>p{color:var(--texte-2);max-width:48ch;margin:0 auto}
+    .tirage-chiffres{display:flex;justify-content:center;gap:28px;margin:22px 0;flex-wrap:wrap}
+    .tirage-chiffres b{display:block;font-size:2rem;font-weight:800;line-height:1}
+    .tirage-chiffres span{font-size:.85rem;color:var(--texte-2)}
+    .tirage-btn{width:100%;min-height:58px;padding:14px 28px;border-radius:999px;border:2px solid var(--orange);background:var(--orange);color:#fff;font-weight:800;font-size:1.05rem;cursor:pointer}
+    .tirage-btn:hover{background:#e65c00;border-color:#e65c00}
+    .tirage-result{display:none;margin-top:24px;padding:22px 16px;background:#fff;border-radius:var(--r-md);border-top:8px solid var(--jaune)}
+    .tirage-result .titre{font-weight:800;font-size:1.2rem}
+    .winner-numero{font-size:clamp(1.5rem,7vw,2.1rem);font-weight:800;margin:8px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+    .winner-pseudo{color:var(--texte-2)}
+    .tirage-result .note{margin-top:12px;font-size:.88rem;color:var(--texte-2)}
+    .tirage-result .btn{margin-top:18px}
+    .card+.card,.tirage-section+.card{margin-top:20px}
+    .garanti-item{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--fond-doux);border-left:6px solid var(--jaune);border-radius:var(--r-md);margin-bottom:8px}
+    .garanti-item .pseudo{font-weight:700}
+    .garanti-item .num{font-size:.85rem;color:var(--texte-2)}
+    .garanti-item .pts{margin-left:auto;font-weight:800;white-space:nowrap}
+    .vide{color:var(--texte-2);font-size:.92rem}
+    .log-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    .log-entry{padding:12px 14px;background:var(--fond-doux);border-left:4px solid var(--bleu);border-radius:0 var(--r-md) var(--r-md) 0;margin-bottom:8px;font-size:.92rem}
+    .log-time{font-size:.8rem;color:var(--texte-2);font-variant-numeric:tabular-nums}
+    .head-actions .head-badge{min-height:36px}
+    .head-actions .masque-mobile{display:none}
 
-    .tab-btn {
-      flex: 1;
-      min-width: 120px;
-      padding: 10px 20px;
-      border-radius: 100px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-      text-align: center;
-    }
-
-    .tab-btn.active {
-      background: var(--vert);
-      color: var(--noir);
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* STATS ADMIN */
-    .stats-admin {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .stat-admin {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 20px;
-    }
-
-    .stat-admin-val {
-      font-family: 'Syne', sans-serif;
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--vert);
-    }
-
-    .stat-admin-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* VALIDATION TABLE */
-    .validation-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .validation-table th {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      padding: 12px 16px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
-    }
-
-    .validation-table td {
-      padding: 14px 16px;
-      font-size: 0.88rem;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      vertical-align: middle;
-    }
-
-    .validation-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-    .btn-valider-defi {
-      padding: 8px 16px;
-      background: var(--vert);
-      color: var(--noir);
-      border: none;
-      border-radius: 100px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-valider-defi:hover { background: #ceff5a; }
-
-    .btn-valider-defi:disabled {
-      background: var(--gris);
-      color: var(--text-muted);
-      cursor: default;
-    }
-
-    .btn-danger {
-      padding: 8px 14px;
-      background: transparent;
-      color: #ff6b6b;
-      border: 1px solid rgba(255,107,107,0.3);
-      border-radius: 100px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-danger:hover {
-      background: rgba(255,107,107,0.1);
-      border-color: #ff6b6b;
-    }
-
-    /* SEARCH BAR */
-    .search-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .search-input {
-      flex: 1;
-      min-width: 200px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 16px;
-      color: var(--blanc);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .search-input:focus { border-color: var(--vert); }
-
-    .filter-select {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      color: var(--blanc);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.88rem;
-      outline: none;
-      cursor: pointer;
-    }
-
-    /* VALIDATION MANUELLE */
-    .manual-form {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      margin-bottom: 24px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.78rem;
-      font-family: 'Syne', sans-serif;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 8px;
-    }
-
-    .form-select {
-      width: 100%;
-      background: var(--gris);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      color: var(--blanc);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    /* TIRAGE AU SORT */
-    .tirage-section {
-      background: linear-gradient(135deg, var(--card-bg), rgba(184,245,66,0.04));
-      border: 1px solid rgba(184,245,66,0.25);
-      border-radius: var(--radius);
-      padding: 36px;
-      text-align: center;
-    }
-
-    .tirage-btn {
-      background: var(--vert);
-      color: var(--noir);
-      border: none;
-      padding: 18px 48px;
-      border-radius: 100px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin-top: 24px;
-    }
-
-    .tirage-btn:hover {
-      background: #ceff5a;
-      transform: scale(1.03);
-      box-shadow: 0 8px 30px rgba(184,245,66,0.3);
-    }
-
-    .tirage-result {
-      display: none;
-      margin-top: 32px;
-      padding: 28px;
-      background: rgba(255,215,0,0.05);
-      border: 1px solid rgba(255,215,0,0.3);
-      border-radius: var(--radius-sm);
-    }
-
-    .winner-numero {
-      font-family: 'Syne', sans-serif;
-      font-size: 2rem;
-      font-weight: 800;
-      color: #FFD700;
-      margin: 12px 0;
-    }
-
-    .winner-pseudo {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--card-bg);
-      border: 1px solid var(--vert);
-      border-radius: var(--radius-sm);
-      padding: 14px 20px;
-      font-size: 0.88rem;
-      color: var(--vert);
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      z-index: 9999;
-      transform: translateY(80px);
-      opacity: 0;
-      transition: all 0.3s ease;
-      max-width: 320px;
-    }
-
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .toast.error {
-      border-color: #ff4444;
-      color: #ff4444;
-    }
-
-    /* BADGE PROFIL */
-    .profil-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      background: var(--gris);
-    }
-
-    /* DEFIS PILLS */
-    .defi-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
-      background: rgba(184,245,66,0.1);
-      border: 1px solid rgba(184,245,66,0.2);
-      border-radius: 100px;
-      font-size: 0.7rem;
-      color: var(--vert);
-      margin: 2px;
-    }
-
-    /* LOG */
-    .log-entry {
-      padding: 12px 16px;
-      background: var(--card-bg);
-      border-left: 3px solid var(--vert);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      margin-bottom: 8px;
-      font-size: 0.85rem;
-    }
-
-    .log-time {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-family: 'Syne', sans-serif;
-    }
-
-    @media (max-width: 640px) {
-      .form-row { grid-template-columns: 1fr; }
-      .tab-btn { font-size: 0.75rem; padding: 8px 12px; }
+    @media (min-width:640px){
+      .login-card{padding:44px 36px}
+      .stats-admin{grid-template-columns:repeat(5,1fr);gap:14px}
+      .stat-admin:last-child{grid-column:auto}
+      .stat-admin-val{font-size:2.1rem}
+      .tab-bar{margin:0 0 28px;padding:0;flex-wrap:wrap}
+      .search-row{grid-template-columns:1fr auto auto}
+      .form-row{grid-template-columns:1fr 1fr}
+      .verif-row{grid-template-columns:minmax(0,320px) auto;justify-content:start}
+      .tirage-section{padding:40px 36px}
+      .tirage-btn{width:auto;padding:16px 44px}
+      .head-actions .masque-mobile{display:inline-flex}
     }
   </style>
 </head>
@@ -385,266 +109,185 @@
 
   <header class="site-header">
     <div class="inner">
-      <a class="logo" href="index.html">M'Airidia</a>
-      <div style="display:flex; gap:12px; align-items:center;">
-        <a href="classement.html" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;">Voir classement</a>
-        <button onclick="logout()" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;">Déconnexion</button>
+      <a class="duo" href="index.html" aria-label="Accueil du Défi Mobilité">
+        <img class="logo-m" src="img/logo-mairidia.png" alt="M'Airidia, une mobilité engagée pour votre quartier">
+        <span class="sep" aria-hidden="true"></span>
+        <img class="logo-cesi" src="img/logo-cesi.png" alt="CESI École d'ingénieurs">
+      </a>
+      <div class="head-actions">
+        <a href="classement.html" class="head-badge masque-mobile">Classement</a>
+        <button onclick="logout()" class="head-badge">Déconnexion</button>
       </div>
     </div>
+    <div class="ruban" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
   </header>
 
-  <!-- LOGIN -->
-  <div class="login-screen" id="login-screen">
-    <div class="login-card fade-up">
-      <div style="font-size:2.5rem; margin-bottom:16px;">🔐</div>
-      <h2>Espace Admin</h2>
+  <!-- CONNEXION -->
+  <main class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="pastille lg" style="--c:var(--bleu-clair)"><span data-ico="cadenas"></span></div>
+      <h1>Espace admin</h1>
       <p>Accès réservé à l'équipe M'Airidia</p>
-      <input
-        type="password"
-        class="input-field"
-        id="admin-key-input"
-        placeholder="Clé d'administration"
-        onkeydown="if(event.key==='Enter') login()"
-        autocomplete="off"
-      >
-      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="login()">
-        Accéder au tableau de bord
-      </button>
-      <p style="margin-top:16px; font-size:0.75rem; color:var(--text-muted);">
-        Clé configurée dans la variable d'environnement <code style="color:var(--vert)">ADMIN_KEY</code> sur Vercel.
-      </p>
+      <input type="password" class="input-field" id="admin-key-input" placeholder="Clé d'administration" aria-label="Clé d'administration" onkeydown="if(event.key==='Enter') login()" autocomplete="off">
+      <button class="btn btn-primary" onclick="login()">Accéder au tableau de bord</button>
+      <p class="note">Clé configurée dans la variable d'environnement <code>ADMIN_KEY</code> sur Vercel.</p>
     </div>
-  </div>
+  </main>
 
-  <!-- DASHBOARD -->
-  <div class="admin-wrapper" id="admin-dashboard" style="display:none;">
+  <!-- TABLEAU DE BORD -->
+  <main class="admin-wrapper" id="admin-dashboard" style="display:none;">
     <div class="container-wide">
 
-      <div class="fade-up" style="margin-bottom:32px;">
-        <span class="tag">Tableau de bord</span>
-        <h1 style="font-size: 2rem; margin-top:12px;">
-          Admin <span style="color:var(--vert)">M'Airidia</span>
-        </h1>
-        <p style="color:var(--text-muted); font-size:0.88rem; margin-top:6px;">
-          Dernière synchro : <span id="last-sync">—</span> ·
-          <button onclick="loadData()" style="background:none;border:none;color:var(--vert);cursor:pointer;font-size:0.88rem;">↻ Actualiser</button>
-        </p>
+      <div class="admin-titre">
+        <h1>Tableau de bord</h1>
+        <p><span>Dernière synchro : <span id="last-sync">—</span></span>
+          <button class="lien-action" onclick="loadData()"><span data-ico="actualiser"></span>Actualiser</button></p>
       </div>
 
-      <!-- STATS -->
       <div class="stats-admin" id="stats-admin">
-        <div class="stat-admin">
-          <div class="stat-admin-val" id="a-total">—</div>
-          <div class="stat-admin-label">Participants ce mois</div>
-        </div>
-        <div class="stat-admin">
-          <div class="stat-admin-val" id="a-defis">—</div>
-          <div class="stat-admin-label">Défis à valider</div>
-        </div>
-        <div class="stat-admin">
-          <div class="stat-admin-val" id="a-points">—</div>
-          <div class="stat-admin-label">Points distribués</div>
-        </div>
-        <div class="stat-admin">
-          <div class="stat-admin-val" id="a-tickets">—</div>
-          <div class="stat-admin-label">Tickets tombola</div>
-        </div>
-        <div class="stat-admin">
-          <div class="stat-admin-val" id="a-garantis">—</div>
-          <div class="stat-admin-label">Lots garantis (5 défis)</div>
-        </div>
+        <div class="stat-admin" style="--c:var(--bleu-clair)"><div class="stat-admin-val" id="a-total">—</div><div class="stat-admin-label">Participants ce mois</div></div>
+        <div class="stat-admin" style="--c:var(--orange)"><div class="stat-admin-val" id="a-defis">—</div><div class="stat-admin-label">Défis à valider</div></div>
+        <div class="stat-admin" style="--c:var(--vert-clair)"><div class="stat-admin-val" id="a-points">—</div><div class="stat-admin-label">Points distribués</div></div>
+        <div class="stat-admin" style="--c:var(--jaune)"><div class="stat-admin-val" id="a-tickets">—</div><div class="stat-admin-label">Tickets tombola</div></div>
+        <div class="stat-admin" style="--c:var(--turquoise)"><div class="stat-admin-val" id="a-garantis">—</div><div class="stat-admin-label">Lots garantis (5 défis)</div></div>
       </div>
 
-      <!-- TABS -->
-      <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('participants')">👥 Participants</button>
-        <button class="tab-btn" onclick="switchTab('validation')">✅ Valider un défi</button>
-        <button class="tab-btn" onclick="switchTab('tirage')">🎰 Tirage au sort</button>
-        <button class="tab-btn" onclick="switchTab('log')">📋 Journal</button>
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" onclick="switchTab('participants')"><span data-ico="duo"></span>Participants</button>
+        <button class="tab-btn" onclick="switchTab('validation')"><span data-ico="coche"></span>Valider un défi</button>
+        <button class="tab-btn" onclick="switchTab('tirage')"><span data-ico="tirage"></span>Tirage au sort</button>
+        <button class="tab-btn" onclick="switchTab('log')"><span data-ico="liste"></span>Journal</button>
       </div>
 
-      <!-- TAB : PARTICIPANTS -->
+      <!-- ONGLET : PARTICIPANTS -->
       <div class="tab-content active" id="tab-participants">
         <div class="card">
           <div class="search-row">
-            <input
-              type="text"
-              class="search-input"
-              id="search-input"
-              placeholder="🔍 Rechercher par pseudo ou numéro..."
-              oninput="filterParticipants()"
-            >
-            <select class="filter-select" id="filter-profil" onchange="filterParticipants()">
+            <input type="text" class="search-input" id="search-input" placeholder="Rechercher un pseudo ou un numéro" aria-label="Rechercher" oninput="filterParticipants()">
+            <select class="filter-select" id="filter-profil" onchange="filterParticipants()" aria-label="Filtrer par profil">
               <option value="">Tous les profils</option>
-              <option value="explorateur">🚶 Explorateur</option>
-              <option value="optimiseur">⚡ Optimiseur</option>
-              <option value="ecoconnecte">🌿 Éco-Connecté</option>
-              <option value="multimodal">🔀 Multimodal</option>
-              <option value="declencheur">💡 Déclencheur</option>
+              <option value="explorateur">Explorateur</option>
+              <option value="optimiseur">Optimiseur</option>
+              <option value="ecoconnecte">Éco-Connecté</option>
+              <option value="multimodal">Multimodal</option>
+              <option value="declencheur">Déclencheur</option>
             </select>
-            <select class="filter-select" id="filter-defis" onchange="filterParticipants()">
+            <select class="filter-select" id="filter-defis" onchange="filterParticipants()" aria-label="Filtrer par défis">
               <option value="">Tous</option>
               <option value="0">0 défi</option>
-              <option value="1">1+ défi</option>
+              <option value="1">1 défi ou plus</option>
               <option value="5">5 défis (lot garanti)</option>
             </select>
           </div>
-
-          <div style="overflow-x:auto;">
+          <div class="table-scroll">
             <table class="validation-table" id="participants-table">
-              <thead>
-                <tr>
-                  <th>Numéro</th>
-                  <th>Pseudo</th>
-                  <th>Profil</th>
-                  <th>Défis réalisés</th>
-                  <th>Points</th>
-                  <th>Tickets</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Numéro</th><th>Pseudo</th><th>Profil</th><th>Défis réalisés</th><th>Points</th><th>Tickets</th><th>Actions</th></tr></thead>
               <tbody id="participants-body">
-                <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:40px;">Chargement...</td></tr>
+                <tr><td colspan="7" class="vide" style="text-align:center;padding:36px;">Chargement…</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- TAB : VALIDATION -->
+      <!-- ONGLET : VALIDATION -->
       <div class="tab-content" id="tab-validation">
-        <div class="manual-form">
-          <h2 style="font-size:1.2rem; margin-bottom:8px;">Valider un défi manuellement</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:24px;">
-            Après vérification du post sur les réseaux sociaux (#DefimobiliteMAiridia + numéro visible).
-          </p>
-
+        <div class="card manual-form">
+          <h2>Valider un défi manuellement</h2>
+          <p class="muted">Après vérification du post sur les réseaux sociaux (#DefimobiliteMAiridia et numéro visible).</p>
           <div class="form-row">
             <div class="form-group">
-              <label>Numéro de participation *</label>
-              <input type="text" class="input-field" id="v-numero" placeholder="MAI-202501-4231" style="margin:0;">
+              <label for="v-numero">Numéro de participation *</label>
+              <input type="text" class="input-field" id="v-numero" placeholder="MAI-202501-4231">
             </div>
             <div class="form-group">
-              <label>Type de défi *</label>
+              <label for="v-defi">Type de défi *</label>
               <select class="form-select" id="v-defi">
-                <option value="">— Choisir —</option>
-                <option value="1">🚴 Défi 1 — Vélo / Marche</option>
-                <option value="2">🚌 Défi 2 — Nouveau transport</option>
-                <option value="3">🚗 Défi 3 — Covoiturage</option>
-                <option value="4">🔀 Défi 4 — Multimodal</option>
-                <option value="5">💶 Défi 5 — Calculer son trajet</option>
-                <option value="challenge7">🔥 Challenge 7 jours</option>
+                <option value="">Choisir un défi</option>
+                <option value="1">Défi 1 : vélo ou marche</option>
+                <option value="2">Défi 2 : nouveau transport</option>
+                <option value="3">Défi 3 : covoiturage</option>
+                <option value="4">Défi 4 : multimodal</option>
+                <option value="5">Défi 5 : calculer son trajet</option>
+                <option value="challenge7">Challenge 7 jours</option>
               </select>
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
-              <label>Points à attribuer</label>
+              <label for="v-points">Points à attribuer</label>
               <select class="form-select" id="v-points">
                 <option value="10">+10 pts (défi standard)</option>
                 <option value="30">+30 pts (Challenge 7 jours)</option>
                 <option value="5">+5 pts (quiz)</option>
-                <option value="custom">Personnalisé...</option>
+                <option value="custom">Personnalisé…</option>
               </select>
             </div>
             <div class="form-group" id="custom-pts-group" style="display:none;">
-              <label>Points personnalisés</label>
-              <input type="number" class="input-field" id="v-points-custom" placeholder="ex: 15" min="1" max="100" style="margin:0;">
+              <label for="v-points-custom">Points personnalisés</label>
+              <input type="number" class="input-field" id="v-points-custom" placeholder="ex. 15" min="1" max="100">
             </div>
           </div>
-
           <div class="form-group" style="margin-bottom:20px;">
-            <label>Lien du post (optionnel)</label>
-            <input type="text" class="input-field" id="v-lien" placeholder="https://instagram.com/..." style="margin:0;">
+            <label for="v-lien">Lien du post (optionnel)</label>
+            <input type="text" class="input-field" id="v-lien" placeholder="https://instagram.com/…">
           </div>
-
-          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-            <button class="btn btn-primary" onclick="validerDefi()">
-              ✅ Valider et créditer les points
-            </button>
-            <button class="btn btn-secondary" onclick="clearForm()">
-              Effacer
-            </button>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="validerDefi()">Valider et créditer les points</button>
+            <button class="btn btn-secondary" onclick="clearForm()">Effacer</button>
           </div>
         </div>
 
-        <!-- RECHERCHE RAPIDE -->
         <div class="card">
-          <h3 style="font-size:1rem; margin-bottom:16px;">🔍 Vérifier un participant</h3>
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <input type="text" class="search-input" id="check-numero" placeholder="Entrer un numéro MAI-..." style="max-width:280px;">
-            <button class="btn btn-secondary" style="padding:10px 20px;" onclick="checkParticipant()">Vérifier</button>
+          <h3>Vérifier un participant</h3>
+          <div class="verif-row">
+            <input type="text" class="search-input" id="check-numero" placeholder="Numéro MAI-…" aria-label="Numéro à vérifier">
+            <button class="btn btn-secondary" onclick="checkParticipant()">Vérifier</button>
           </div>
           <div id="check-result" style="margin-top:16px; display:none;"></div>
         </div>
       </div>
 
-      <!-- TAB : TIRAGE -->
+      <!-- ONGLET : TIRAGE -->
       <div class="tab-content" id="tab-tirage">
         <div class="tirage-section">
-          <div style="font-size:3rem; margin-bottom:16px;">🎰</div>
-          <h2 style="font-size:1.8rem; margin-bottom:8px;">Tirage au sort du mois</h2>
-          <p style="color:var(--text-muted); max-width:480px; margin:0 auto 8px;">
-            Chaque participant a autant de tickets que ses points ÷ 10.
-            Le tirage est pondéré — plus tu as de points, plus tu as de chances.
-          </p>
-
-          <div style="display:flex; gap:24px; justify-content:center; margin:24px 0; flex-wrap:wrap;">
-            <div style="text-align:center;">
-              <div style="font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--vert);" id="t-tickets-total">—</div>
-              <div style="font-size:0.78rem; color:var(--text-muted);">tickets au total</div>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--vert);" id="t-garantis">—</div>
-              <div style="font-size:0.78rem; color:var(--text-muted);">lots garantis (5 défis)</div>
-            </div>
+          <div class="pastille lg" style="--c:var(--orange)"><span data-ico="tirage"></span></div>
+          <h2>Tirage au sort du mois</h2>
+          <p>Chaque participant a autant de tickets que ses points divisés par 10. Le tirage est pondéré : plus de points, plus de chances.</p>
+          <div class="tirage-chiffres">
+            <div><b id="t-tickets-total">—</b><span>tickets au total</span></div>
+            <div><b id="t-garantis">—</b><span>lots garantis (5 défis)</span></div>
           </div>
-
-          <button class="tirage-btn" onclick="lancerTirage()">
-            🎰 Lancer le tirage au sort
-          </button>
-
+          <button class="tirage-btn" onclick="lancerTirage()">Lancer le tirage au sort</button>
           <div class="tirage-result" id="tirage-result">
-            <div style="font-size:1.5rem; margin-bottom:8px;">🏆 Gagnant !</div>
+            <div class="titre">Gagnant</div>
             <div class="winner-numero" id="winner-numero">—</div>
             <div class="winner-pseudo" id="winner-pseudo">—</div>
-            <div style="margin-top:16px; font-size:0.82rem; color:var(--text-muted);">
-              Présente-toi à l'accueil avec ce numéro pour récupérer ton lot.
-            </div>
-            <button onclick="publierResultat()" class="btn btn-primary" style="margin-top:20px;">
-              📢 Publier sur la page classement
-            </button>
+            <p class="note">Le gagnant se présente à l'accueil avec ce numéro pour récupérer son lot.</p>
+            <button onclick="publierResultat()" class="btn btn-primary">Publier sur la page classement</button>
           </div>
         </div>
-
-        <!-- LOTS GARANTIS -->
-        <div class="card" style="margin-top:24px;">
-          <h3 style="font-size:1rem; margin-bottom:16px;">🎁 Lots garantis (5 défis réalisés)</h3>
-          <div id="garantis-list">
-            <p style="color:var(--text-muted); font-size:0.85rem;">Chargement...</p>
-          </div>
+        <div class="card">
+          <h3>Lots garantis (5 défis réalisés)</h3>
+          <div id="garantis-list" style="margin-top:12px"><p class="vide">Chargement…</p></div>
         </div>
       </div>
 
-      <!-- TAB : JOURNAL -->
+      <!-- ONGLET : JOURNAL -->
       <div class="tab-content" id="tab-log">
         <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="font-size:1.1rem;">Journal des actions</h2>
+          <div class="log-head">
+            <h2>Journal des actions</h2>
             <button onclick="clearLog()" class="btn-danger">Effacer le journal</button>
           </div>
-          <div id="log-list">
-            <p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:20px;">Aucune action enregistrée.</p>
-          </div>
+          <div id="log-list"><p class="vide" style="text-align:center;padding:20px;">Aucune action enregistrée.</p></div>
         </div>
       </div>
 
     </div>
-  </div>
+  </main>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/app.js"></script>
   <script>
@@ -755,7 +398,7 @@
     function renderParticipants(list) {
       const tbody = document.getElementById('participants-body');
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px;">Aucun participant trouvé</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="vide" style="text-align:center;padding:36px;">Aucun participant ne correspond à cette recherche.</td></tr>`;
         return;
       }
 
@@ -767,16 +410,12 @@
 
         return `
           <tr>
-            <td style="font-family:'Syne',sans-serif;font-size:0.82rem;color:var(--vert);">${p.numero}</td>
-            <td style="font-weight:500;">${p.pseudo}</td>
-            <td><span class="profil-chip">${profil.emoji || '?'} ${(profil.nom || p.profil || '').split(' ')[0]}</span></td>
-            <td>
-              <span style="color:${hasGaranti ? 'var(--vert)' : 'var(--blanc)'}; font-weight:${hasGaranti ? '700' : '400'}">
-                ${defisCount}/5 ${hasGaranti ? '🏆' : ''}
-              </span>
-            </td>
-            <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--vert);">${p.points}</td>
-            <td style="font-family:'Syne',sans-serif;font-size:0.85rem;">🎫 ${tickets}</td>
+            <td class="td-num">${p.numero}</td>
+            <td style="font-weight:700;">${p.pseudo}</td>
+            <td><span class="profil-chip" style="--c:${profil.couleur || 'var(--bleu)'}">${icone(profil.icone)} ${(profil.nom || p.profil || '').split(' ')[0]}</span></td>
+            <td><span class="${hasGaranti ? 'garanti' : ''}">${defisCount}/5${hasGaranti ? ' · lot garanti' : ''}</span></td>
+            <td class="td-pts">${p.points}</td>
+            <td>${tickets}</td>
             <td>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
                 <button class="btn-valider-defi" onclick="prefillValidation('${p.numero}')">+ Points</button>
@@ -792,18 +431,18 @@
       const el = document.getElementById('garantis-list');
 
       if (garantis.length === 0) {
-        el.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;">Aucun participant n'a encore réalisé les 5 défis ce mois-ci.</p>`;
+        el.innerHTML = `<p class="vide">Aucun participant n'a encore réalisé les 5 défis ce mois-ci.</p>`;
         return;
       }
 
       el.innerHTML = garantis.map(p => `
-        <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:8px;margin-bottom:8px;">
-          <span style="font-size:1.2rem;">🏆</span>
-          <div style="flex:1;">
-            <div style="font-weight:600;">${p.pseudo}</div>
-            <div style="font-size:0.78rem;color:var(--text-muted);">${p.numero}</div>
+        <div class="garanti-item">
+          <div class="pastille" style="--c:var(--jaune)">${icone('trophee')}</div>
+          <div>
+            <div class="pseudo">${p.pseudo}</div>
+            <div class="num">${p.numero}</div>
           </div>
-          <div style="font-family:'Syne',sans-serif;font-weight:700;color:#FFD700;">${p.points} pts</div>
+          <div class="pts">${p.points} pts</div>
         </div>
       `).join('');
     }
@@ -879,18 +518,18 @@
         const data = await res.json();
 
         if (data.success) {
-          showToast(`✅ +${pts} pts crédités — Total : ${data.nouveau_total} pts (${data.tickets} tickets)`);
+          showToast(`+${pts} pts crédités. Total : ${data.nouveau_total} pts (${data.tickets} tickets)`);
           addLog(`Défi validé — ${numero} — +${pts} pts${lien ? ' — ' + lien : ''}`);
           clearForm();
           loadData();
         } else {
           // Mode démo
-          showToast(`✅ Simulation : +${pts} pts pour ${numero} (mode démo)`);
+          showToast(`Simulation : +${pts} pts pour ${numero} (mode démo)`);
           addLog(`[DÉMO] Défi validé — ${numero} — +${pts} pts`);
           clearForm();
         }
       } catch(e) {
-        showToast(`✅ Simulation : +${pts} pts pour ${numero} (mode démo)`);
+        showToast(`Simulation : +${pts} pts pour ${numero} (mode démo)`);
         addLog(`[DÉMO] Défi validé — ${numero} — +${pts} pts`);
         clearForm();
       }
@@ -918,23 +557,19 @@
       if (found) {
         const profil = PROFILS[found.profil] || {};
         resultEl.innerHTML = `
-          <div style="background:var(--card-bg);border:1px solid var(--vert);border-radius:8px;padding:16px;">
-            <div style="display:flex;gap:16px;align-items:center;">
-              <span style="font-size:2rem;">${profil.emoji || '?'}</span>
-              <div>
-                <div style="font-weight:600;">${found.pseudo}</div>
-                <div style="font-family:'Syne',sans-serif;color:var(--vert);font-size:0.85rem;">${found.numero}</div>
-                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
-                  ${found.points} pts · ${found.defis || 0}/5 défis · 🎫 ${found.tickets || Math.floor(found.points/10)} tickets
-                </div>
-              </div>
+          <div class="check-ok">
+            <div class="pastille" style="--c:${profil.couleur || 'var(--bleu)'}">${icone(profil.icone)}</div>
+            <div>
+              <div style="font-weight:700;">${found.pseudo}</div>
+              <div class="num">${found.numero}</div>
+              <div class="meta">${found.points} pts, ${found.defis || 0}/5 défis, ${found.tickets || Math.floor(found.points/10)} tickets</div>
             </div>
           </div>
         `;
       } else {
         resultEl.innerHTML = `
-          <div style="padding:12px 16px;background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.2);border-radius:8px;font-size:0.85rem;color:#ff6b6b;">
-            ❌ Aucun participant trouvé avec le numéro <strong>${numero}</strong>
+          <div class="check-ko">
+            Aucun participant trouvé avec le numéro <strong>${numero}</strong>. Vérifie la saisie (format MAI-AAAAMM-XXXX).
           </div>
         `;
       }
@@ -959,7 +594,7 @@
 
       // Animation
       const btn = document.querySelector('.tirage-btn');
-      btn.textContent = '🎰 Tirage en cours...';
+      btn.textContent = 'Tirage en cours…';
       btn.disabled = true;
 
       let count = 0;
@@ -976,18 +611,18 @@
           // Gagnant final
           const winner = pool[Math.floor(Math.random() * pool.length)];
           numEl.textContent = winner.numero;
-          pseudoEl.textContent = `${PROFILS[winner.profil]?.emoji || ''} ${winner.pseudo} — ${winner.points} pts`;
+          pseudoEl.textContent = `${winner.pseudo} · ${winner.points} pts`;
           document.getElementById('tirage-result').style.display = 'block';
-          btn.textContent = '🎰 Nouveau tirage';
+          btn.textContent = 'Relancer un tirage';
           btn.disabled = false;
           addLog(`Tirage lancé — Gagnant : ${winner.numero} (${winner.pseudo})`);
-          showToast(`🏆 Gagnant : ${winner.numero}`);
+          showToast(`Gagnant : ${winner.numero}`);
         }
       }, 80);
     }
 
     function publierResultat() {
-      showToast('✅ Résultat enregistré — Il apparaîtra sur la page classement après redéploiement.');
+      showToast('Résultat enregistré. Il apparaîtra sur la page classement après redéploiement.');
       addLog(`Résultat du tirage publié sur la page classement`);
     }
 
@@ -1008,7 +643,7 @@
     function renderLog() {
       const el = document.getElementById('log-list');
       if (actionLog.length === 0) {
-        el.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:20px;">Aucune action enregistrée.</p>`;
+        el.innerHTML = `<p class="vide" style="text-align:center;padding:20px;">Aucune action enregistrée.</p>`;
         return;
       }
       el.innerHTML = actionLog.map(e => `

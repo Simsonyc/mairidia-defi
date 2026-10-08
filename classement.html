@@ -2,279 +2,94 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#413692">
   <title>Classement — Défi Mobilité M'Airidia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    :root {
-      --refresh-interval: 30; /* secondes */
-    }
+.board-hero{margin-bottom:24px}
+    .live-badge{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.85rem;color:var(--bleu);background:var(--fond-doux);border-radius:999px;padding:6px 14px;margin-bottom:14px}
+    .live-dot{width:9px;height:9px;border-radius:50%;background:var(--orange);animation:pulse 1.5s infinite}
+    .board-hero h1{margin-bottom:10px}
+    .board-hero p{color:var(--texte-2)}
+    .refresh-bar{height:4px;background:var(--fond-doux);border-radius:999px;overflow:hidden;margin-bottom:28px}
+    .refresh-fill{height:100%;width:100%;background:var(--bleu);border-radius:999px;animation:countdown 30s linear infinite}
+    @keyframes countdown{from{width:100%}to{width:0%}}
 
-    body { background: var(--noir); }
+    .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px}
+    .stat-card{background:var(--fond-doux);border-radius:var(--r-md);padding:16px;border-top:5px solid var(--c)}
+    .stat-val{display:block;font-size:1.9rem;font-weight:800;line-height:1}
+    .stat-label{display:block;margin-top:6px;font-size:.85rem;color:var(--texte-2)}
 
-    .board-wrapper { padding: 48px 0 80px; }
+    .podium{display:flex;justify-content:center;align-items:flex-end;gap:8px;margin-bottom:32px}
+    .podium-item{flex:1;max-width:200px;text-align:center;min-width:0}
+    .podium-item .pastille{margin:0 auto 8px;width:40px;height:40px}
+    .podium-item .pastille .ico{width:20px;height:20px}
+    .podium-block{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;padding:12px 6px;border-radius:14px 14px 0 0;background:var(--c);color:var(--bleu)}
+    .podium-item.rang-1 .podium-block{height:130px}
+    .podium-item.rang-2 .podium-block{height:100px}
+    .podium-item.rang-3 .podium-block{height:80px}
+    .podium-rank{font-size:1.5rem;font-weight:800;line-height:1}
+    .podium-pts{font-weight:800;font-size:.9rem}
+    .podium-pseudo{font-weight:700;font-size:.8rem;margin-top:8px;overflow-wrap:anywhere;line-height:1.25}
+    .podium-profil{font-size:.72rem;color:var(--texte-2)}
 
-    /* HERO CLASSEMENT */
-    .board-hero {
-      text-align: center;
-      margin-bottom: 56px;
-      position: relative;
-    }
+    .table-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .table-head h2{font-size:1.25rem}
+    #last-update{font-size:.82rem;color:var(--texte-2)}
+    .rank-table th:nth-child(3),.rank-table td:nth-child(3),
+    .rank-table th:nth-child(4),.rank-table td:nth-child(4){display:none}
+    .board-card{padding:16px 10px}
+    .board-card .table-head{padding:0 6px}
+    .rank-table th,.rank-table td{padding:10px 6px}
+    .td-rank{width:36px}
+    /* Très petits écrans : la colonne Tickets se déduit des points (1 ticket / 10 points) */
+    .rank-table th:nth-child(6),.rank-table td:nth-child(6){display:none}
+    @media (min-width:400px){.rank-table th:nth-child(6),.rank-table td:nth-child(6){display:table-cell}}
+    .td-rank span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--fond-doux);font-weight:800;font-size:.85rem}
+    .tr-podium .td-rank span{background:var(--c)}
+    .td-pseudo{font-weight:700;white-space:nowrap;font-size:.92rem}
+    .td-profil{color:var(--texte-2);font-size:.9rem}
+    .td-profil .ico{display:inline-block;vertical-align:-4px;width:18px;height:18px;margin-right:6px}
+    .td-defis{color:var(--texte-2);font-size:.9rem;white-space:nowrap}
+    .td-pts{text-align:right;font-weight:800}
+    .td-tickets{text-align:right;color:var(--texte-2);white-space:nowrap}
 
-    .live-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,107,53,0.1);
-      border: 1px solid rgba(255,107,53,0.3);
-      border-radius: 100px;
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      font-family: 'Syne', sans-serif;
-      color: #ff6b35;
-      margin-bottom: 20px;
-    }
+    .empty-state{text-align:center;padding:40px 12px;color:var(--texte-2)}
+    .empty-state .pastille{margin:0 auto 12px}
+    .empty-state .btn{margin-top:16px}
 
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      background: #ff6b35;
-      border-radius: 50%;
-      animation: pulse 1.5s infinite;
-    }
+    .tirage-box{margin-top:28px;background:var(--orange);color:#fff;border-radius:var(--r-lg);padding:24px 20px}
+    .tirage-box .label{font-weight:700}
+    .tirage-date{font-size:clamp(1.5rem,7vw,2rem);font-weight:800;line-height:1.1;margin:6px 0 10px}
+    .tirage-box p{font-size:.92rem}
+    .tirage-box p+p{margin-top:8px}
 
-    .refresh-bar {
-      height: 2px;
-      background: var(--gris);
-      border-radius: 1px;
-      overflow: hidden;
-      margin-bottom: 40px;
-    }
+    .gagnants-section{margin-top:32px}
+    .gagnants-section h2{font-size:1.25rem;margin-bottom:14px}
+    .gagnant-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--fond-doux);border-left:6px solid var(--jaune);border-radius:var(--r-md);margin-bottom:10px}
+    .gagnant-num{font-weight:800}
+    .gagnant-lot{font-size:.9rem;color:var(--texte-2)}
+    .cta-bas{margin-top:36px;text-align:center}
 
-    .refresh-fill {
-      height: 100%;
-      background: var(--vert);
-      border-radius: 1px;
-      width: 100%;
-      animation: countdown 30s linear infinite;
-    }
-
-    @keyframes countdown {
-      from { width: 100%; }
-      to { width: 0%; }
-    }
-
-    /* TOP 3 */
-    .podium {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 16px;
-      margin-bottom: 48px;
-    }
-
-    .podium-item {
-      text-align: center;
-      flex: 1;
-      max-width: 180px;
-    }
-
-    .podium-avatar {
-      font-size: 2.5rem;
-      margin-bottom: 8px;
-    }
-
-    .podium-block {
-      border-radius: 12px 12px 0 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 16px 12px;
-    }
-
-    .podium-item:nth-child(2) .podium-block {
-      height: 120px;
-      background: linear-gradient(180deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
-      border: 1px solid rgba(255,215,0,0.3);
-    }
-
-    .podium-item:nth-child(1) .podium-block {
-      height: 90px;
-      background: linear-gradient(180deg, rgba(192,192,192,0.12), rgba(192,192,192,0.04));
-      border: 1px solid rgba(192,192,192,0.2);
-    }
-
-    .podium-item:nth-child(3) .podium-block {
-      height: 75px;
-      background: linear-gradient(180deg, rgba(205,127,50,0.1), rgba(205,127,50,0.03));
-      border: 1px solid rgba(205,127,50,0.2);
-    }
-
-    .podium-rank { font-size: 1.5rem; }
-    .podium-pts {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 1rem;
-      color: var(--vert);
-    }
-
-    .podium-pseudo {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 6px;
-      word-break: break-all;
-    }
-
-    .podium-profil {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    /* TABLE */
-    .rank-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .rank-table thead tr {
-      border-bottom: 1px solid var(--border);
-    }
-
-    .rank-table th {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      padding: 10px 16px;
-      text-align: left;
-      font-weight: 600;
-    }
-
-    .rank-table th:last-child { text-align: right; }
-
-    .rank-table tbody tr {
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      transition: background 0.15s;
-    }
-
-    .rank-table tbody tr:hover {
-      background: rgba(255,255,255,0.02);
-    }
-
-    .rank-table td {
-      padding: 14px 16px;
-      font-size: 0.88rem;
-    }
-
-    .td-rank {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      color: var(--text-muted);
-      width: 40px;
-    }
-
-    .tr-gold .td-rank { color: #FFD700; }
-    .tr-silver .td-rank { color: #C0C0C0; }
-    .tr-bronze .td-rank { color: #CD7F32; }
-
-    .td-pseudo { font-weight: 500; }
-    .td-profil { color: var(--text-muted); font-size: 0.8rem; }
-    .td-defis { font-size: 0.8rem; color: var(--text-muted); }
-
-    .td-pts {
-      text-align: right;
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      color: var(--vert);
-    }
-
-    .td-tickets {
-      text-align: right;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    /* STATS ROW */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-      margin-bottom: 40px;
-    }
-
-    .stat-card {
-      text-align: center;
-      padding: 20px 16px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-    }
-
-    .stat-val {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--vert);
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* TIRAGE */
-    .tirage-box {
-      margin-top: 48px;
-      padding: 28px;
-      background: linear-gradient(135deg, var(--card-bg), rgba(184,245,66,0.03));
-      border: 1px solid rgba(184,245,66,0.2);
-      border-radius: var(--radius);
-      text-align: center;
-    }
-
-    .tirage-date {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--vert);
-      margin: 8px 0;
-    }
-
-    .gagnants-section {
-      margin-top: 48px;
-    }
-
-    .gagnant-card {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 20px;
-      background: rgba(255,215,0,0.05);
-      border: 1px solid rgba(255,215,0,0.2);
-      border-radius: var(--radius-sm);
-      margin-bottom: 10px;
-    }
-
-    .gagnant-emoji { font-size: 1.5rem; }
-    .gagnant-num { font-family: 'Syne', sans-serif; font-weight: 700; color: #FFD700; }
-    .gagnant-lot { font-size: 0.85rem; color: var(--text-muted); }
-
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-    }
-
-    .empty-emoji { font-size: 3rem; display: block; margin-bottom: 16px; }
-
-    @media (max-width: 640px) {
-      .podium { gap: 8px; }
-      .rank-table th:nth-child(3),
-      .rank-table td:nth-child(3) { display: none; }
+    @media (min-width:640px){
+      .stats-row{grid-template-columns:repeat(4,1fr);gap:16px}
+      .stat-val{font-size:2.3rem}
+      .podium{gap:16px}
+      .podium-item .pastille{width:52px;height:52px}
+      .podium-item.rang-1 .podium-block{height:160px}
+      .podium-item.rang-2 .podium-block{height:125px}
+      .podium-item.rang-3 .podium-block{height:100px}
+      .podium-pseudo{font-size:.95rem}
+      .podium-profil{font-size:.82rem}
+      .rank-table th:nth-child(3),.rank-table td:nth-child(3),
+      .rank-table th:nth-child(4),.rank-table td:nth-child(4){display:table-cell}
+      .tirage-box{padding:32px}
+      .board-card{padding:28px}
+      .board-card .table-head{padding:0}
+      .rank-table th,.rank-table td{padding:12px}
     }
   </style>
 </head>
@@ -282,101 +97,73 @@
 
   <header class="site-header">
     <div class="inner">
-      <a class="logo" href="index.html">M'Airidia</a>
-      <a href="quiz.html" class="btn btn-primary" style="padding:8px 20px;font-size:0.82rem;">Je participe →</a>
+      <a class="duo" href="index.html" aria-label="Accueil du Défi Mobilité">
+        <img class="logo-m" src="img/logo-mairidia.png" alt="M'Airidia, une mobilité engagée pour votre quartier">
+        <span class="sep" aria-hidden="true"></span>
+        <img class="logo-cesi" src="img/logo-cesi.png" alt="CESI École d'ingénieurs">
+      </a>
+      <a href="quiz.html" class="head-badge">Je participe</a>
     </div>
+    <div class="ruban" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
   </header>
 
-  <div class="board-wrapper">
+  <main class="page">
     <div class="container-wide">
 
-      <div class="board-hero fade-up">
-        <div class="live-badge">
-          <div class="live-dot"></div>
-          Mis à jour en temps réel
-        </div>
-        <h1 class="display" style="font-size: clamp(2rem, 6vw, 3.5rem);">
-          Classement<br><span style="color:var(--vert)">du mois</span>
-        </h1>
-        <p class="lead" style="margin-top: 12px; font-size: 1rem;">
-          Tirage au sort le <strong id="tirage-date" style="color:var(--blanc)">—</strong> · Résultats affichés ici uniquement
-        </p>
+      <div class="board-hero">
+        <div class="live-badge"><span class="live-dot"></span>Mis à jour en temps réel</div>
+        <h1>Classement du mois</h1>
+        <p>Tirage au sort le <strong id="tirage-date">—</strong>. Les résultats sont affichés ici uniquement.</p>
       </div>
 
-      <!-- BARRE REFRESH -->
-      <div class="refresh-bar">
-        <div class="refresh-fill" id="refresh-fill"></div>
+      <div class="refresh-bar"><div class="refresh-fill" id="refresh-fill"></div></div>
+
+      <div class="stats-row" id="stats-row">
+        <div class="stat-card" style="--c:var(--bleu-clair)"><span class="stat-val" id="stat-participants">—</span><span class="stat-label">Participants</span></div>
+        <div class="stat-card" style="--c:var(--vert-clair)"><span class="stat-val" id="stat-defis">—</span><span class="stat-label">Défis réalisés</span></div>
+        <div class="stat-card" style="--c:var(--jaune)"><span class="stat-val" id="stat-tickets">—</span><span class="stat-label">Tickets tombola</span></div>
+        <div class="stat-card" style="--c:var(--orange)"><span class="stat-val" id="stat-jours">—</span><span class="stat-label">Jours restants</span></div>
       </div>
 
-      <!-- STATS -->
-      <div class="stats-row fade-up-delay-1" id="stats-row">
-        <div class="stat-card">
-          <span class="stat-val" id="stat-participants">—</span>
-          <span class="stat-label">Participants</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-val" id="stat-defis">—</span>
-          <span class="stat-label">Défis réalisés</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-val" id="stat-tickets">—</span>
-          <span class="stat-label">Tickets tombola</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-val" id="stat-jours">—</span>
-          <span class="stat-label">Jours restants</span>
-        </div>
-      </div>
-
-      <!-- PODIUM TOP 3 -->
       <div id="podium-section"></div>
 
-      <!-- TABLEAU COMPLET -->
-      <div class="card fade-up-delay-2" style="overflow: auto;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
-          <h2 style="font-size: 1.2rem;">Tous les participants</h2>
-          <span id="last-update" style="font-size:0.75rem; color:var(--text-muted);">Actualisation dans <span id="countdown">30</span>s</span>
+      <div class="card board-card">
+        <div class="table-head">
+          <h2>Tous les participants</h2>
+          <span id="last-update">Actualisation dans <span id="countdown">30</span> s</span>
         </div>
-        <div id="table-container">
-          <div class="empty-state">
-            <span class="empty-emoji">⏳</span>
-            <p>Chargement du classement...</p>
-          </div>
+        <div id="table-container" class="table-scroll">
+          <div class="empty-state"><p>Chargement du classement…</p></div>
         </div>
       </div>
 
-      <!-- TIRAGE INFO -->
-      <div class="tirage-box fade-up-delay-3">
-        <p style="font-size:0.85rem; color:var(--text-muted);">Prochain tirage au sort</p>
+      <div class="tirage-box">
+        <p class="label">Prochain tirage au sort</p>
         <div class="tirage-date" id="tirage-date-box">Fin de mois</div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-top: 8px;">
-          10 points = 1 ticket · Lot garanti pour 5 défis réalisés
-        </p>
-        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:12px;">
-          Les résultats sont affichés uniquement sur cette page — aucun email envoyé.
-          <br>Présente-toi à l'accueil avec ton numéro de participation pour récupérer ton lot.
-        </p>
+        <p>10 points = 1 ticket. Un lot est garanti à partir de 5 défis réalisés.</p>
+        <p>Aucun e-mail n'est envoyé : présente-toi à l'accueil avec ton numéro de participation pour récupérer ton lot.</p>
       </div>
 
-      <!-- GAGNANTS PRÉCÉDENTS -->
-      <div class="gagnants-section fade-up-delay-3" id="gagnants-section" style="display:none;">
-        <h2 style="font-size: 1.2rem; margin-bottom: 20px;">🏆 Gagnants du mois précédent</h2>
+      <div class="gagnants-section" id="gagnants-section" style="display:none;">
+        <h2>Gagnants du mois précédent</h2>
         <div id="gagnants-list"></div>
       </div>
 
-      <!-- CTA -->
-      <div style="text-align:center; margin-top:48px;">
-        <a href="quiz.html" class="btn btn-primary btn-large">
-          👉 Participer au défi
-        </a>
+      <div class="cta-bas">
+        <a href="quiz.html" class="btn btn-primary btn-large">Participer au défi</a>
       </div>
 
     </div>
-  </div>
+  </main>
 
   <footer>
-    <div class="container">
-      <p>Défi Mobilité M'Airidia — Classement anonyme · Aucune donnée personnelle affichée</p>
+    <div class="container-wide pied">
+      <div class="duo">
+        <img class="logo-m" src="img/logo-mairidia.png" alt="M'Airidia">
+        <span class="sep" aria-hidden="true"></span>
+        <img class="logo-cesi" src="img/logo-cesi.png" alt="CESI École d'ingénieurs">
+      </div>
+      <p>Classement anonyme : aucune donnée personnelle n'est affichée. Défi Mobilité, un projet commun M'Airidia et CESI École d'ingénieurs.</p>
     </div>
   </footer>
 
@@ -438,14 +225,15 @@
       // Podium
       const top3 = sorted.slice(0, 3);
       const podiumOrder = top3.length >= 2 ? [top3[1], top3[0], top3[2]].filter(Boolean) : top3;
-      const ranks = top3.length >= 2 ? ['🥈', '🥇', '🥉'] : ['🥇', '🥈', '🥉'];
+      const ranks = top3.length >= 2 ? [2, 1, 3] : [1, 2, 3];
+      const couleursRang = { 1: 'var(--jaune)', 2: 'var(--bleu-clair)', 3: 'var(--turquoise)' };
 
       if (top3.length > 0) {
         document.getElementById('podium-section').innerHTML = `
-          <div class="podium fade-up-delay-1">
+          <div class="podium">
             ${podiumOrder.map((p, i) => p ? `
-              <div class="podium-item">
-                <div class="podium-avatar">${PROFILS[p.profil]?.emoji || '👤'}</div>
+              <div class="podium-item rang-${ranks[i]}" style="--c:${couleursRang[ranks[i]]}">
+                <div class="pastille" style="--c:${PROFILS[p.profil]?.couleur || 'var(--bleu)'}">${icone(PROFILS[p.profil]?.icone)}</div>
                 <div class="podium-block">
                   <div class="podium-rank">${ranks[i]}</div>
                   <div class="podium-pts">${p.points} pts</div>
@@ -462,13 +250,14 @@
       if (sorted.length === 0) {
         document.getElementById('table-container').innerHTML = `
           <div class="empty-state">
-            <span class="empty-emoji">🚀</span>
-            <p>Sois le premier à participer !</p>
-            <a href="quiz.html" class="btn btn-primary" style="margin-top:16px;">Démarrer le défi</a>
+            <div class="pastille lg" style="--c:var(--orange)">${icone('trophee')}</div>
+            <p>Personne n'a encore participé ce mois-ci. La première place est libre.</p>
+            <a href="quiz.html" class="btn btn-primary">Démarrer le défi</a>
           </div>
         `;
       } else {
-        const rowClass = (i) => i === 0 ? 'tr-gold' : i === 1 ? 'tr-silver' : i === 2 ? 'tr-bronze' : '';
+        const couleursRang = ['var(--jaune)', 'var(--bleu-clair)', 'var(--turquoise)'];
+        const rowAttr = (i) => i < 3 ? ` class="tr-podium" style="--c:${couleursRang[i]}"` : '';
         document.getElementById('table-container').innerHTML = `
           <table class="rank-table">
             <thead>
@@ -483,13 +272,13 @@
             </thead>
             <tbody>
               ${sorted.map((p, i) => `
-                <tr class="${rowClass(i)}">
-                  <td class="td-rank">${i + 1}</td>
+                <tr${rowAttr(i)}>
+                  <td class="td-rank"><span>${i + 1}</span></td>
                   <td class="td-pseudo">${p.pseudo}</td>
-                  <td class="td-profil">${PROFILS[p.profil]?.emoji || ''} ${PROFILS[p.profil]?.nom?.split(' ')[0] || ''}</td>
+                  <td class="td-profil">${PROFILS[p.profil] ? icone(PROFILS[p.profil].icone) : ''}${PROFILS[p.profil]?.nom?.split(' ')[0] || ''}</td>
                   <td class="td-defis">${p.defis || 0}/5 défis</td>
                   <td class="td-pts">${p.points}</td>
-                  <td class="td-tickets">🎫 ${Math.floor(p.points / 10)}</td>
+                  <td class="td-tickets">${Math.floor(p.points / 10)}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -502,7 +291,7 @@
         document.getElementById('gagnants-section').style.display = 'block';
         document.getElementById('gagnants-list').innerHTML = data.gagnants_precedents.map(g => `
           <div class="gagnant-card">
-            <span class="gagnant-emoji">🏆</span>
+            <div class="pastille" style="--c:var(--jaune)">${icone('trophee')}</div>
             <div>
               <div class="gagnant-num">${g.numero}</div>
               <div class="gagnant-lot">${g.lot}</div>
