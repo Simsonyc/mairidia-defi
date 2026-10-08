@@ -197,19 +197,24 @@
       gagnants_precedents: []
     };
 
+    // Données réelles uniquement : plus de faux participants affichés en production
     async function loadClassement() {
-      let data = DEMO_DATA;
-
       try {
-        const res = await fetch('/api/classement');
-        if (res.ok) {
-          const json = await res.json();
-          if (json.participants && json.participants.length > 0) data = json;
-        }
-      } catch(e) {}
-
-      renderClassement(data);
+        const res = await fetch('/api/classement', { cache: 'no-store' });
+        if (!res.ok) throw new Error('API ' + res.status);
+        const json = await res.json();
+        renderClassement({
+          participants: json.participants || [],
+          gagnants_precedents: json.gagnants_precedents || []
+        });
+      } catch (e) {
+        console.error('Classement indisponible :', e);
+        document.getElementById('table-container').innerHTML = `
+          <div class="empty-state"><p>Classement momentanément indisponible. Nouvel essai automatique dans quelques secondes.</p></div>`;
+      }
     }
+
+    const echapper = (t) => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
     function renderClassement(data) {
       const sorted = [...data.participants].sort((a, b) => b.points - a.points);
@@ -228,6 +233,7 @@
       const ranks = top3.length >= 2 ? [2, 1, 3] : [1, 2, 3];
       const couleursRang = { 1: 'var(--jaune)', 2: 'var(--bleu-clair)', 3: 'var(--turquoise)' };
 
+      if (top3.length === 0) document.getElementById('podium-section').innerHTML = '';
       if (top3.length > 0) {
         document.getElementById('podium-section').innerHTML = `
           <div class="podium">
@@ -293,8 +299,8 @@
           <div class="gagnant-card">
             <div class="pastille" style="--c:var(--jaune)">${icone('trophee')}</div>
             <div>
-              <div class="gagnant-num">${g.numero}</div>
-              <div class="gagnant-lot">${g.lot}</div>
+              <div class="gagnant-num">${echapper(g.pseudo)} · ${echapper(g.numero)}</div>
+              <div class="gagnant-lot">${echapper(g.lot)}</div>
             </div>
           </div>
         `).join('');

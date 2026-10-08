@@ -1,74 +1,37 @@
-// api/points.js — Ajouter des points après validation d'un défi
-// Appelé manuellement par l'équipe (ou via interface admin future)
+// POST /api/points : valide un défi et crédite les points (clé admin requise)
+const db = require('../lib/redis');
 
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
-
-const DATA_PATH = join(process.cwd(), 'data', 'participants.json');
-// Clé secrète simple pour protéger l'endpoint
-const ADMIN_KEY = process.env.ADMIN_KEY || 'mairidia2025';
-
-function readData() {
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') return db.repondre(res, 405, { success: false, error: 'Méthode non autorisée' });
+  if (!db.estAdmin(req)) return db.repondre(res, 401, { success: false, error: 'Clé admin incorrecte' });
   try {
-    return JSON.parse(readFileSync(DATA_PATH, 'utf8'));
-  } catch {
-    return { participants: [], lastUpdated: '' };
-  }
-}
+    const b = db.lireCorps(req);
+    const numero = String(b.numero || '').trim().toUpperCase();
+    const pts = parseInt(b.points_bonus, 10);
+    const type = b.type === 'challenge7' ? 'challenge7' : 'defi';
+    const defiId = type === 'defi' ? parseInt(b.defi_id, 10) : null;
 
-function writeData(data) {
-  data.lastUpdated = new Date().toISOString();
-  writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
-}
+    if (!Number.isInteger(pts) || pts < 1 || pts > 100) return db.repondre(res, 400, { success: false, error: 'Nombre de points invalide (1 à 100)' });
+    if (type === 'defi' && !(defiId >= 1 && defiId <= 5)) return db.repondre(res, 400, { success: false, error: 'Défi invalide' });
 
-export default function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Key');
+    const p = await db.lireParticipant(numero);
+    if (!p) return db.repondre(res, 404, { success: false, error: `Aucun participant avec le numéro ${numero}` });
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+    p.defis_ids = p.defis_ids || [];
+    if (type === 'defi') {
+      if (p.defis_ids.includes(defiId)) return db.repondre(res, 409, { success: false, error: `Le défi ${defiId} est déjà validé pour ce participant` });
+      p.defis_ids.push(defiId);
+      p.defis = p.defis_ids.length;
+    } else {
+      if (p.challenge7) return db.repondre(res, 409, { success: false, error: 'Le Challenge 7 jours est déjà validé pour ce participant' });
+      p.challenge7 = true;
+    }
+    p.points += pts;
+    p.historique = (p.historique || []).concat({ date: new Date().toISOString(), type, defi_id: defiId, points: pts, preuve: String(b.lien_preuve || '').slice(0, 300) });
+    await db.ecrireParticipant(p);
 
-  // Auth basique
-  const adminKey = req.headers['x-admin-key'] || req.body.admin_key;
-  if (adminKey !== ADMIN_KEY) {
-    return res.status(401).json({ error: 'Non autorisé' });
-  }
-
-  const { numero, defi_id, points_bonus, type } = req.body;
-
-  if (!numero) {
-    return res.status(400).json({ error: 'Numéro manquant' });
-  }
-
-  const data = readData();
-  const idx = data.participants.findIndex(p => p.numero === numero);
-
-  if (idx === -1) {
-    return res.status(404).json({ error: 'Participant introuvable' });
-  }
-
-  const pts = points_bonus || (defi_id ? 10 : 5);
-  data.participants[idx].points += pts;
-
-  if (defi_id && !data.participants[idx].defis_realises?.includes(defi_id)) {
-    data.participants[idx].defis_realises = data.participants[idx].defis_realises || [];
-    data.participants[idx].defis_realises.push(defi_id);
-    data.participants[idx].defis = data.participants[idx].defis_realises.length;
-  }
-
-  if (type === 'challenge7') {
-    data.participants[idx].challenge7 = true;
-  }
-
-  try {
-    writeData(data);
-    return res.status(200).json({
-      success: true,
-      nouveau_total: data.participants[idx].points,
-      tickets: Math.floor(data.participants[idx].points / 10)
-    });
+    return db.repondre(res, 200, { success: true, nouveau_total: p.points, tickets: Math.floor(p.points / 10) });
   } catch (e) {
-    return res.status(500).json({ error: 'Erreur serveur' });
+    return db.erreurServeur(res, e);
   }
-}
+};

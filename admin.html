@@ -348,8 +348,15 @@
     // =============================================
     async function loadData() {
       try {
-        const res = await fetch('/api/classement');
-        if (!res.ok) return false;
+        // La clé admin est vérifiée par le serveur : une mauvaise clé renvoie 401
+        const res = await fetch('/api/admin', { headers: { 'X-Admin-Key': ADMIN_KEY }, cache: 'no-store' });
+        if (!res.ok) {
+          if (res.status !== 401) {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || `API indisponible (${res.status})`, 'error');
+          }
+          return false;
+        }
         const data = await res.json();
 
         allParticipants = data.participants || [];
@@ -359,13 +366,8 @@
         document.getElementById('last-sync').textContent = new Date().toLocaleTimeString('fr-FR');
         return true;
       } catch(e) {
-        // Mode démo si pas d'API
-        allParticipants = getDemoData();
-        renderStats();
-        renderParticipants(allParticipants);
-        renderGarantis();
-        document.getElementById('last-sync').textContent = 'Mode démo';
-        return true;
+        showToast('API injoignable', 'error');
+        return false;
       }
     }
 
@@ -523,15 +525,10 @@
           clearForm();
           loadData();
         } else {
-          // Mode démo
-          showToast(`Simulation : +${pts} pts pour ${numero} (mode démo)`);
-          addLog(`[DÉMO] Défi validé — ${numero} — +${pts} pts`);
-          clearForm();
+          showToast(data.error || 'Validation refusée', 'error');
         }
       } catch(e) {
-        showToast(`Simulation : +${pts} pts pour ${numero} (mode démo)`);
-        addLog(`[DÉMO] Défi validé — ${numero} — +${pts} pts`);
-        clearForm();
+        showToast('API injoignable : rien n\'a été enregistré', 'error');
       }
     }
 
@@ -610,6 +607,7 @@
           clearInterval(anim);
           // Gagnant final
           const winner = pool[Math.floor(Math.random() * pool.length)];
+          window.dernierGagnant = winner;
           numEl.textContent = winner.numero;
           pseudoEl.textContent = `${winner.pseudo} · ${winner.points} pts`;
           document.getElementById('tirage-result').style.display = 'block';
@@ -621,9 +619,27 @@
       }, 80);
     }
 
-    function publierResultat() {
-      showToast('Résultat enregistré. Il apparaîtra sur la page classement après redéploiement.');
-      addLog(`Résultat du tirage publié sur la page classement`);
+    async function publierResultat() {
+      const g = window.dernierGagnant;
+      if (!g) { showToast('Lance d\'abord un tirage', 'error'); return; }
+      const lot = prompt('Lot attribué à ce gagnant ?', 'Lot du mois');
+      if (lot === null) return;
+      try {
+        const res = await fetch('/api/tirage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_KEY },
+          body: JSON.stringify({ numero: g.numero, lot })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Gagnant publié sur la page classement');
+          addLog(`Gagnant publié : ${g.numero} (${g.pseudo}) — ${lot}`);
+        } else {
+          showToast(data.error || 'Publication refusée', 'error');
+        }
+      } catch (e) {
+        showToast('API injoignable : rien n\'a été publié', 'error');
+      }
     }
 
     // =============================================
