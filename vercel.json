@@ -5,6 +5,8 @@
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "css/**", "use": "@vercel/static" },
     { "src": "js/**", "use": "@vercel/static" },
+    { "src": "img/**", "use": "@vercel/static" },
+    { "src": "fonts/**", "use": "@vercel/static" },
     { "src": "data/**", "use": "@vercel/static" }
   ],
   "routes": [
@@ -12,6 +14,8 @@
     { "src": "/(.*\\.html)", "dest": "/$1" },
     { "src": "/css/(.*)", "dest": "/css/$1" },
     { "src": "/js/(.*)", "dest": "/js/$1" },
+    { "src": "/img/(.*)", "dest": "/img/$1" },
+    { "src": "/fonts/(.*)", "dest": "/fonts/$1" },
     { "src": "/", "dest": "/index.html" }
   ]
 }
